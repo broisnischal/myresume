@@ -2,6 +2,10 @@ import { PrismaClient } from "@prisma/client";
 
 const adminUser = [
   {
+    name: "Nischal",
+    email: "brand@nischal",
+  },
+  {
     name: "admin",
     email: "admin@localhost",
   },

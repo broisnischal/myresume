@@ -36,5 +36,3 @@ Make sure to deploy the output of `remix build`
 
 - `build/`
 - `public/build/`
-
-fo1_KiOiZ3R9vpiqhD_wzepuARgcfNKCKLCq7-8y4-\_PoYk
