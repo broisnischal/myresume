@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import { db } from "~/db/db.server";
+import { db } from "@/db/db.server";
 
 export async function loader() {
   const users = await db.user.findMany();
