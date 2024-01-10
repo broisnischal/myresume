@@ -32,9 +32,16 @@ async function main() {
     });
   }
 
-  await dbclient.$transaction(
-    adminUser.map((user) => dbclient.user.create({ data: user }))
-  );
+  // await dbclient.$transaction(
+  //   adminUser.map((user) =>
+  //     dbclient.user.create({
+  //       data: {
+  //         name: user.name,
+  //         email: user.email,
+  //       },
+  //     })
+  //   )
+  // );
 
   await dbclient.$disconnect();
 }
