@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  json,
   useLoaderData,
 } from "@remix-run/react";
 import clsx from "clsx";
@@ -16,6 +17,11 @@ import {
 } from "remix-themes";
 import { themeSessionResolver } from "./session.server";
 import styles from "./tailwind.css";
+import ProgessBar from "./components/common/progess-bar";
+import { Toaster } from "./components/ui/sonner";
+import { useToast } from "./utils/toaster";
+import { getToast } from "./utils/toast.server";
+import { combineHeaders } from "./utils/misc";
 
 export const links: LinksFunction = () => [
   {
@@ -27,10 +33,31 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { getTheme } = await themeSessionResolver(request);
-  return {
-    theme: getTheme(),
-  };
+
+  const { toast, headers: toastHeaders } = await getToast(request);
+
+  return json(
+    { toast, theme: getTheme() },
+    { headers: combineHeaders(toastHeaders) }
+  );
 }
+
+// function Toast() {
+//   const { toast: toasttt } = useLoaderData<typeof loader>();
+
+//   // const location = useLocation();
+
+//   return toasttt ? (
+//     <div className="toast flex items-center justify-center px-5 py-1 gap-4 bg-primary text-secondary rounded-lg">
+//       <p>{toasttt.message}</p>
+//       <Form method="GET" action={location.pathname}>
+//         <button type="submit" className="cursor-pointer ">
+//           <X />
+//         </button>
+//       </Form>
+//     </div>
+//   ) : null;
+// }
 
 export default function AppWithProviders() {
   const data = useLoaderData<typeof loader>();
@@ -43,6 +70,7 @@ export default function AppWithProviders() {
 
 export function App() {
   const data = useLoaderData<typeof loader>();
+  useToast(data.toast);
 
   const [theme] = useTheme();
 
@@ -57,6 +85,8 @@ export function App() {
         <Links />
       </head>
       <body>
+        <Toaster closeButton position="bottom-right" />
+        <ProgessBar />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
