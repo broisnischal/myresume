@@ -50,7 +50,7 @@ export default function Index() {
                         }}
                         className="select-none bg-gradient-to-r from-[#31bdc6] to-[#3178c6]   bg-clip-text text-transparent duration-300"
                       >
-                        Start Building Resume{" "}
+                        Start Building Resume {" "}
                       </span>
                     </div>
                   </Link>
