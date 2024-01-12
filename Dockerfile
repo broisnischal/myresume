@@ -29,7 +29,11 @@ RUN npm ci --include=dev
 COPY --link . .
 
 
-ENV DATABASE_URL=file:sqlite.db
+# ENV DATABASE_URL=file:sqlite.db
+# Fetch environment variables from Fly.io and set them
+# ARG DATABASE_URL
+
+ENV DATABASE_URL=$DATABASE_URL
 ENV PORT="3000"
 ENV NODE_ENV="production"
 
