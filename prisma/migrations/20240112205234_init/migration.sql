@@ -17,12 +17,19 @@ CREATE TABLE "Tag" (
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "nickname" TEXT NOT NULL,
-    "tagline" TEXT NOT NULL,
-    "bio" TEXT NOT NULL,
-    "usertype" "UserType" NOT NULL DEFAULT 'FREE',
+    "username" TEXT NOT NULL,
+    "avatar_url" TEXT,
+    "location" TEXT,
+    "twitter_username" TEXT,
+    "github_username" TEXT,
+    "nickname" TEXT,
+    "tagline" TEXT,
+    "bio" TEXT,
     "name" TEXT,
-    "imageId" TEXT NOT NULL,
+    "website" TEXT,
+    "github_bio" TEXT,
+    "usertype" "UserType" NOT NULL DEFAULT 'FREE',
+    "imageId" TEXT,
     "roleId" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -202,7 +209,7 @@ CREATE TABLE "_PermissionToRole" (
 CREATE UNIQUE INDEX "Tag_slug_key" ON "Tag"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE INDEX "Works_resumeId_idx" ON "Works"("resumeId");
@@ -232,7 +239,7 @@ CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
 CREATE UNIQUE INDEX "Verification_target_type_key" ON "Verification"("target", "type");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Connection_providerName_providerId_key" ON "Connection"("providerName", "providerId");
+CREATE UNIQUE INDEX "Connection_providerId_key" ON "Connection"("providerId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_PermissionToRole_AB_unique" ON "_PermissionToRole"("A", "B");
@@ -241,7 +248,7 @@ CREATE UNIQUE INDEX "_PermissionToRole_AB_unique" ON "_PermissionToRole"("A", "B
 CREATE INDEX "_PermissionToRole_B_index" ON "_PermissionToRole"("B");
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE SET NULL ON UPDATE CASCADE;
