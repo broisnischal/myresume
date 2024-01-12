@@ -1,46 +1,56 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// enum UserStatus {
-//   ACTIVE
-//   INACTIVE
-//   BANNED
-// }
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
 
-// enum UserType {
-//   ADMIN
-//   USER
-//   PRO
-//   FREE
-// }
+enum UserType {
+  ADMIN
+  USER
+  PRO
+  FREE
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+}
 
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  nickname String
-  tagline  String
-  bio      String
-  // usertype UserType @default(FREE)
+  id               String  @id @default(uuid())
+  email            String
+  username         String  @unique
+  avatar_url       String?
+  location         String?
+  twitter_username String?
+  github_username  String?
+  nickname         String?
+  tagline          String?
+  bio              String?
+  name             String?
+  website          String?
+  github_bio       String?
 
-  name       String?
-  userImages Image        @relation(fields: [imageId], references: [id])
-  imageId    String
-  Session    Session[]
-  Password   Password[]
-  Role       Role?        @relation(fields: [roleId], references: [id])
+  usertype   UserType     @default(FREE)
+  userImages Image?       @relation(fields: [imageId], references: [id])
+  imageId    String?
+  session    Session[]
+  password   Password?
+  role       Role?        @relation(fields: [roleId], references: [id])
   roleId     String?
-  Connection Connection[]
-  Resume     Resume[]
-  Socials    Socials[]
+  connection Connection[]
+  resume     Resume[]
+  social     Socials[]
 }
 
 model Works {
@@ -52,6 +62,24 @@ model Works {
   endDate   DateTime
   resumeId  String?
   Resume    Resume?  @relation(fields: [resumeId], references: [id])
+
+  @@index([resumeId])
+}
+
+model Projects {
+  id    String   @id @default(cuid())
+  title String
+  desc  String
+  url   String
+  tag   String[]
+
+  startDate DateTime
+  endDate   DateTime
+  resumeId  String?
+  resume    Resume?  @relation(fields: [resumeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([resumeId])
 }
@@ -83,6 +111,7 @@ model Resume {
   Settings Settings[]
   Works    Works[]
   Skills   Skills[]
+  Projects Projects[]
 }
 
 model Settings {
@@ -215,5 +244,5 @@ model Connection {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 
-  @@unique([providerName, providerId])
+  @@unique([providerId])
 }
