@@ -7,7 +7,6 @@ app = "myresume"
 primary_region = "sin"
 
 [build]
-image = "infisical/infisical:v0.43.4"
 
 [http_service]
   internal_port = 3000
