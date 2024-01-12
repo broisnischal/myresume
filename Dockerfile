@@ -33,7 +33,8 @@ COPY --link . .
 # Fetch environment variables from Fly.io and set them
 # ARG DATABASE_URL
 
-ENV DATABASE_URL=DATABASE_URL
+# ENV DATABASE_URL="postgresql://postgres:qwzY7y7NagnE7A9s@db.vvpjpgbovibmciobdopg.supabase.co:5432/postgres"
+ENV DATABASE_URL="$DATABASE_URL"
 ENV PORT="3000"
 ENV NODE_ENV="production"
 
