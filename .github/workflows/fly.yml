@@ -1,19 +1,25 @@
 name: Deployment
+
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     name: Production
     runs-on: ubuntu-latest
     environment: production
+
     steps:
-      - name: Deploy
+      - name: Checkout Repository
         uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Setup Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      - run: flyctl deploy --remote-only
-        env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Deploy to Fly.io
+        run: flyctl deploy --remote-only
