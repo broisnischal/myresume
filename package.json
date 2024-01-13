@@ -11,7 +11,8 @@
     "typecheck": "tsc",
     "seed": "npx prisma db seed",
     "migrate": "npx prisma migrate dev",
-    "studio": "npx prisma studio",
+    "push": "npx prisma db push",
+    "studio": "dotenv -c db.env -- npx prisma studio",
     "force-migrate": "npx prisma db push --force-reset && npx prisma migrate dev --name init",
     "mig": "npx prisma migrate deploy"
   },

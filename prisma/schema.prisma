@@ -14,10 +14,25 @@ enum UserStatus {
 }
 
 enum UserType {
+  SUPERADMIN
   ADMIN
   USER
   PRO
   FREE
+}
+
+enum THEME {
+  DEFAULT
+  LIGHT
+  DARK
+}
+
+enum RESUMETYPE {
+  BASIC // default
+  PRO
+  CODE
+  EDITOR
+  PREMIUM
 }
 
 model Tag {
@@ -61,9 +76,29 @@ model Works {
   startDate DateTime
   endDate   DateTime
   resumeId  String?
-  Resume    Resume?  @relation(fields: [resumeId], references: [id])
+  resume    Resume?  @relation(fields: [resumeId], references: [id])
 
   @@index([resumeId])
+}
+
+enum EventAnalytics {
+  RESUME_CLICK
+  LINK_CLICK
+  SOCIAL_CLICK
+  PROFILE_VIEW
+}
+
+model Analytics {
+  id     Int            @id @default(autoincrement())
+  userId Int
+  event  EventAnalytics
+
+  count Int @default(0)
+
+  timestamp DateTime @default(now())
+  createdAt DateTime @default(now())
+  Resume    Resume?  @relation(fields: [resumeId], references: [id])
+  resumeId  String?
 }
 
 model Projects {
@@ -95,10 +130,14 @@ model Skills {
 }
 
 model Resume {
-  id          String @id @default(uuid())
+  id String @id @default(uuid())
+
+  name String
+  slug String @unique
+
   title       String
-  content     String
-  description String
+  content     String?
+  description String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -106,12 +145,16 @@ model Resume {
   public   Boolean @default(true)
   template Boolean @default(false)
 
-  user     User       @relation(fields: [userId], references: [id])
-  userId   String     @unique
-  Settings Settings[]
-  Works    Works[]
-  Skills   Skills[]
-  Projects Projects[]
+  theme      THEME      @default(DEFAULT)
+  resumetype RESUMETYPE @default(BASIC)
+
+  user      User        @relation(fields: [userId], references: [id])
+  userId    String      @unique
+  settings  Settings[]
+  works     Works[]
+  skills    Skills[]
+  projects  Projects[]
+  analytics Analytics[]
 }
 
 model Settings {
