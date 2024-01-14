@@ -25,7 +25,7 @@ export function ErrorBoundary() {
     <>
       <h1>Error</h1>
       <p>
-        <i>{error.message}</i>
+        <i>{JSON.stringify(error, null, 2)}</i>
       </p>
     </>
   );
