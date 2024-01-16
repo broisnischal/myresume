@@ -10,14 +10,9 @@ import {
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
-import {
-  Form,
-  useFetcher,
-  useLoaderData,
-  useNavigation,
-} from "@remix-run/react";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { Camera } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const MAX_SIZE = 1024 * 1024 * 2; // 2MB
@@ -80,7 +75,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function CreateResume() {
   const [image, setImage] = useState<File | null>(null);
-  const fetcher = useFetcher();
+  // const fetcher = useFetcher();
   const { userImage } = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
