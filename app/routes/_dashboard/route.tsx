@@ -3,13 +3,6 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
 
 import navigation from "./navigation.json";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = retriveUser(request);
