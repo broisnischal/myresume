@@ -1,0 +1,29 @@
+[
+    {
+        "name": "Links",
+        "link": "link"
+    },
+    {
+        "name": "Create",
+        "link": "create"
+    },
+    {
+        "name": "Works",
+        "link": "work"
+    },
+    {
+        "name": "contact",
+        "link": "contact"
+    },
+    {
+        "name": "settings",
+        "link": "settings"
+    },
+    {
+        "name": "bio",
+        "link": "bio" 
+    }, {
+        "name": "analytics",
+        "link": "analytics"
+    }
+]
