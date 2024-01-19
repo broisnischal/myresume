@@ -14,7 +14,7 @@ export default function Features() {
                 Discover Our Unique Features
               </h1>
               <p className="max-w-[600px] text-zinc-200 md:text-xl dark:text-zinc-100 mx-auto">
-                Our features are designed to enhance your productivity and
+                Our features are designed to enhance your boost your resume and
                 streamline your workflow.
               </p>
             </div>
@@ -38,10 +38,12 @@ export default function Features() {
                       <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-bold text-white">Smart Inbox</h2>
+                  <h2 className="text-xl font-bold text-white">
+                    Smart Analytics
+                  </h2>
                   <p className="text-zinc-200 dark:text-zinc-100 ">
-                    Our Smart Inbox feature helps you manage your emails
-                    efficiently by prioritizing important emails.
+                    Our Smart Analytics feature helps you to understand your
+                    details about the resume.
                   </p>
                 </div>
                 <div className="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">

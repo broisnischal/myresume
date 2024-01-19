@@ -73,6 +73,7 @@ export default function User() {
     },
     shouldValidate: "onBlur",
   });
+
   return (
     <div>
       <Link to={"/profile"}>Profile</Link>

@@ -289,3 +289,14 @@ model Connection {
 
   @@unique([providerId])
 }
+
+model NewsLetter {
+  id    String @id @default(cuid())
+  email String @unique
+
+  subscribed Boolean @default(false)
+  hash       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

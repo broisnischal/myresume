@@ -1,6 +1,15 @@
-import { type MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import { ActionFunctionArgs, json, type MetaFunction } from "@remix-run/node";
+import { Link, useFetcher, useNavigation } from "@remix-run/react";
 import Features from "@/components/pages/feature";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import { parse } from "@conform-to/zod";
+import { createToastHeaders } from "@/utils/toast.server";
+import { useForm } from "@conform-to/react";
+import resend from "@/utils/resend.server";
+import { db } from "@/db/db.server";
+
 // import { Toaster } from "sonner";
 
 export const meta: MetaFunction = () => {
@@ -9,6 +18,68 @@ export const meta: MetaFunction = () => {
     { name: "description", content: "Welcome to Remix!" },
   ];
 };
+
+const subscribeSchema = z.object({
+  email: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email({
+      message: "Email should be valid",
+    }),
+});
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+
+  const intent = formData.get("_intent");
+
+  switch (intent) {
+    case "subscribe": {
+      const submission = parse(formData, { schema: subscribeSchema });
+
+      if (!submission.value || submission.intent !== "submit") {
+        return json({ submission }, { status: 400 });
+      }
+
+      await db.newsLetter.create({
+        data: {
+          email: submission.value.email,
+        },
+      });
+
+      const toastHeaders = await createToastHeaders({
+        title: "Subscribed!",
+        description:
+          "Please confirm your email address to complete the subscription.",
+      });
+
+      const data = await resend.emails.send({
+        from: "onboarding@resend.dev",
+        to: submission.value.email,
+        subject: "Hello World",
+        html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
+      });
+
+      console.log(data);
+
+      return json(
+        {
+          submission,
+        },
+        {
+          headers: toastHeaders,
+        }
+      );
+    }
+    default:
+      break;
+  }
+
+  return {
+    headers: {},
+  };
+}
 
 export default function Index() {
   return (
@@ -35,7 +106,7 @@ export default function Index() {
 
                 <div className="m-auto flex items-center justify-center">
                   <Link to={"/main"} prefetch="viewport">
-                    <div className="group relative overflow-hidden rounded-full dark:bg-white/30 bg-black/5 px-3 py-1 duration-300 w-fit border-[1px] hover:border-[#31bdc6] cursor-pointer border-secondary/30">
+                    <div className="group relative overflow-hidden rounded-full dark:bg-white/10 backdrop:blur-2xl bg-black/5 px-3 py-1 duration-300 w-fit border-[1px] hover:border-[#31bdc6] cursor-pointer border-secondary/30">
                       {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
                       <svg
                         className="mr-1 inline-block h-4 w-4 fill-[#31bdc6]"
@@ -59,33 +130,67 @@ export default function Index() {
               {/* <Link to={"/main"}>
 								<Button variant="default">Start Building Resume</Button>
 							</Link> */}
-              {/* <div className="w-full max-w-sm space-y-2 mx-auto">
-								<form className="flex space-x-2">
-									<Input
-										className="max-w-lg flex-1 bg-gray-800 text-white border-gray-900"
-										placeholder="Enter your email"
-										type="email"
-									/>
-									<Button className="bg-white text-black" type="submit">
-										Join Now
-									</Button>
-								</form>
-								<p className="text-xs text-zinc-200 dark:text-zinc-100">
-									Get ready to redefine your email experience.
-									<Link
-										className="underline underline-offset-2 text-white"
-										href="#"
-									>
-										Terms & Conditions
-									</Link>
-								</p>
-							</div> */}
             </div>
           </div>
         </div>
       </section>
 
       <Features />
+
+      <NewsLetter />
+    </div>
+  );
+}
+
+export function NewsLetter() {
+  const newsletter = useFetcher();
+
+  // const navigation = useNavigation();
+  // const lastSubmission = newsletter.data;
+
+  const [form, fields] = useForm({
+    id: "user",
+    onValidate({ formData }) {
+      return parse(formData, { schema: subscribeSchema });
+    },
+    shouldValidate: "onBlur",
+  });
+
+  // const isSending =
+
+  return (
+    <div className="min-h-[50vh] w-[90vw] m-auto flex flex-col lg:flex-row items-start lg:items-center justify-evenly">
+      <div className="flex flex-col gap-3 ">
+        <h2 className="text-4xl font-bold">Newsletter</h2>
+        <p className="text-balance max-w-[350px]">
+          We are working hard to create this among you, all Developers. Stay
+          Tuned for the latest releases and features.
+        </p>
+      </div>
+      <div className="flex flex-col gap-3">
+        <newsletter.Form
+          className="flex  items-center justify-center gap-2 dark:bg-black dark:text-zinc-100 "
+          method="post"
+          {...form.props}
+        >
+          <Input
+            className="min-w-[30vw]"
+            placeholder="Suscribe to our newsletter"
+            {...fields.email}
+          />
+
+          <input type="hidden" name="_intent" value="subscribe" />
+          <Button type="submit" variant="outline">
+            Subscribe
+          </Button>
+        </newsletter.Form>
+        <div>{fields.email.error}</div>
+
+        {/* <p className="max-w-[70%]">
+          Got it! Please go check your email to confirm your subscription,
+          otherwise you won't get our email.
+        </p> */}
+      </div>
     </div>
   );
 }

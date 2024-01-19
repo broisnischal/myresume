@@ -85,7 +85,7 @@ export function App() {
         <Links />
       </head>
       <body>
-        <Toaster closeButton position="bottom-right" />
+        <Toaster position="bottom-right" />
         <ProgessBar />
         <Outlet />
         <ScrollRestoration />
