@@ -11,7 +11,7 @@ interface IndividualContributionProps {
   };
 }
 
-export const IndividualContribution = ({
+export const ContributionBox = ({
   className,
   item: { date, count, level },
 }: IndividualContributionProps) => {
@@ -24,27 +24,28 @@ export const IndividualContribution = ({
     <div className="">
       <div
         className={cn(
-          "h-3 relative group w-3 rounded-[3px] cursor-auto group ",
+          "h-3 relative group w-3 rounded-[2px] [outline:1px_solid_#1b1f230f] outline-offset-[-1px]  cursor-auto  ",
           level === 0 && "bg-[#161b22]",
           level === 1 && "bg-[#0e4429]",
           level === 2 && "bg-[#006d32]",
           level === 3 && "bg-[#26a641]",
-          level === 4 && "bg-[#39d353]"
+          level === 4 && "bg-[#39d353]",
+          className
         )}
       >
         <div
           className={twMerge(
-            `absolute hidden group-hover:flex group-hover:items-center group-hover:justify-center rounded-sm text-center z-10 left-[50%] translate-x-[-50%] px-1 py-1 top-[-25px] bg-[#33383f] rounded-[3px] ${
+            `absolute hidden group-hover:flex group-hover:items-center group-hover:justify-center text-center z-10 left-[50%] translate-x-[-50%] px-1 py-1 top-[-35px] bg-[#33383f] rounded-[3px] ${
               count === 0 ? "min-w-[150px]" : "min-w-[250px]"
             }`
           )}
         >
           {count === 0
             ? "No contributions"
-            : `${count} contributions on ${moment(date).format("MMMM Do")}`}
+            : `${count} contributions on ${moment(date).format("MMM Do")}`}
         </div>
       </div>
-      <div className="absolute top-[-15px]">{monthNameShort}</div>
+      <div className="absolute top-[-20px]">{monthNameShort}</div>
     </div>
   );
 };

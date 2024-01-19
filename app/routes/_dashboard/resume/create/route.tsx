@@ -76,7 +76,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function CreateResume() {
   const [image, setImage] = useState<File | null>(null);
   // const fetcher = useFetcher();
-  const { userImage, user } = useLoaderData<typeof loader>();
+  const { userImage } = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
