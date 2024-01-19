@@ -19,8 +19,8 @@ export default function Features() {
               </p>
             </div>
             <div className="w-full max-w-full space-y-4 mx-auto">
-              <div className="grid grid-cols-3 gap-8">
-                <div className="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg">
+              <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8  [&>div]:max-w-[400px] self-center place-items-center">
+                <div className="flex flex-col items-center space-y-2 border-gray-800 p-4 rounded-lg ">
                   <div className="p-2 bg-black bg-opacity-50 rounded-full">
                     <svg
                       className=" text-white h-6 w-6 mb-2 opacity-75"
@@ -39,7 +39,7 @@ export default function Features() {
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-white">Smart Inbox</h2>
-                  <p className="text-zinc-200 dark:text-zinc-100">
+                  <p className="text-zinc-200 dark:text-zinc-100 ">
                     Our Smart Inbox feature helps you manage your emails
                     efficiently by prioritizing important emails.
                   </p>

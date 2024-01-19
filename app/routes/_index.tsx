@@ -35,7 +35,7 @@ export default function Index() {
 
                 <div className="m-auto flex items-center justify-center">
                   <Link to={"/main"} prefetch="viewport">
-                    <div className="group relative overflow-hidden rounded-full dark:bg-white/10 bg-black/5 px-3 py-1 duration-300 w-fit border-[1px] hover:border-[#31bdc6] cursor-pointer border-secondary/30">
+                    <div className="group relative overflow-hidden rounded-full dark:bg-white/30 bg-black/5 px-3 py-1 duration-300 w-fit border-[1px] hover:border-[#31bdc6] cursor-pointer border-secondary/30">
                       {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
                       <svg
                         className="mr-1 inline-block h-4 w-4 fill-[#31bdc6]"
@@ -50,7 +50,7 @@ export default function Index() {
                         }}
                         className="select-none bg-gradient-to-r from-[#31bdc6] to-[#3178c6]   bg-clip-text text-transparent duration-300"
                       >
-                        Start Building Resume {" "}
+                        Start Building Resume
                       </span>
                     </div>
                   </Link>
