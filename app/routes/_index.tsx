@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, json, type MetaFunction } from "@remix-run/node";
-import { Link, useFetcher, useNavigation } from "@remix-run/react";
+import { Link, useFetcher } from "@remix-run/react";
 import Features from "@/components/pages/feature";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,6 @@ import { z } from "zod";
 import { parse } from "@conform-to/zod";
 import { createToastHeaders } from "@/utils/toast.server";
 import { useForm } from "@conform-to/react";
-import resend from "@/utils/resend.server";
 import { db } from "@/db/db.server";
 
 // import { Toaster } from "sonner";
@@ -22,10 +21,10 @@ export const meta: MetaFunction = () => {
 const subscribeSchema = z.object({
   email: z
     .string({
-      required_error: "Email is required",
+      required_error: "Please provide your email.",
     })
     .email({
-      message: "Email should be valid",
+      message: "Please enter a valid email address.",
     }),
 });
 
@@ -54,14 +53,14 @@ export async function action({ request }: ActionFunctionArgs) {
           "Please confirm your email address to complete the subscription.",
       });
 
-      const data = await resend.emails.send({
-        from: "onboarding@resend.dev",
-        to: submission.value.email,
-        subject: "Hello World",
-        html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
-      });
+      // const data = await resend.emails.send({
+      //   from: "onboarding@resend.dev",
+      //   to: submission.value.email,
+      //   subject: "Hello World",
+      //   html: `<p>Confirm your subscription <strong><a href='http://localhost:3000/newsletter/confirm/${user.id}'>Confirm</a></strong>!</p>`,
+      // });
 
-      console.log(data);
+      // console.log(data);
 
       return json(
         {
@@ -153,7 +152,7 @@ export function NewsLetter() {
     onValidate({ formData }) {
       return parse(formData, { schema: subscribeSchema });
     },
-    shouldValidate: "onBlur",
+    shouldValidate: "onSubmit",
   });
 
   // const isSending =
@@ -184,7 +183,7 @@ export function NewsLetter() {
             Subscribe
           </Button>
         </newsletter.Form>
-        <div>{fields.email.error}</div>
+        <div className="text-red-400 text-[14px]">{fields.email.error}</div>
 
         {/* <p className="max-w-[70%]">
           Got it! Please go check your email to confirm your subscription,

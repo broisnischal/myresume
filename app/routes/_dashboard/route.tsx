@@ -49,10 +49,10 @@ export default function Dashboard() {
                   const className =
                     "px-5 grid place-content-center min-h-[30px] py-1 text-[14px] capitalize";
                   return isActive
-                    ? "bg-[#3d3d3d61] text-white  rounded-full  " + className
+                    ? "bg-black text-white  rounded-full  " + className
                     : "text-gray-500 " + className;
                 }}
-                to={`/resume/${item.link}`}
+                to={`/resume/id1/${item.link}`}
               >
                 {item.name}
               </NavLink>

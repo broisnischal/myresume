@@ -3,7 +3,7 @@ import { Form } from "@remix-run/react";
 
 export default function Login() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <Form action="/auth/github" method="post">
         <Button className="flex items-center space-x-4 py-2" variant="outline">
           <svg
