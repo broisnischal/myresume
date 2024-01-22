@@ -65,6 +65,7 @@ export default function Dashboard() {
                     : "text-gray-400 " + className;
                 }}
                 to={`/resume/id1/${item.link}`}
+                prefetch="intent"
               >
                 <TooltipProvider>
                   <Tooltip>
