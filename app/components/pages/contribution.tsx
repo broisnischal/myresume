@@ -36,12 +36,12 @@ export const ContributionBox = ({
         <div
           className={twMerge(
             `absolute hidden group-hover:flex group-hover:items-center group-hover:justify-center text-center z-10 left-[50%] translate-x-[-50%] px-1 py-1 top-[-35px] bg-[#33383f] rounded-[3px] ${
-              count === 0 ? "min-w-[150px]" : "min-w-[250px]"
+              count === 0 ? "min-w-[250px]" : "min-w-[250px]"
             }`
           )}
         >
           {count === 0
-            ? "No contributions"
+            ? `No contributions on ${moment(date).format("MMM Do")}`
             : `${count} contributions on ${moment(date).format("MMM Do")}`}
         </div>
       </div>
