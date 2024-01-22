@@ -135,7 +135,7 @@ model Resume {
   name String
   slug String @unique
 
-  title       String
+  title       String?
   content     String?
   description String?
 
@@ -149,7 +149,7 @@ model Resume {
   resumetype RESUMETYPE @default(BASIC)
 
   user      User        @relation(fields: [userId], references: [id])
-  userId    String      @unique
+  userId    String
   settings  Settings[]
   works     Works[]
   skills    Skills[]

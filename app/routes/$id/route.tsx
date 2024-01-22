@@ -5,10 +5,16 @@ import {
   Outlet,
   useFetcher,
   useLoaderData,
+  useParams,
   useSubmit,
 } from "@remix-run/react";
-import navigation from "./resume.$id/navigation";
+import navigation from "./resume/navigation";
 import { Button } from "@/components/ui/button";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 import {
   Tooltip,
   TooltipContent,
@@ -39,6 +45,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
 
+  const { id } = useParams();
+
   console.log(data);
 
   const submit = useSubmit();
@@ -49,7 +57,25 @@ export default function Dashboard() {
 
   return (
     <>
-      <Outlet />
+      <div className="flex">
+        <ResizablePanelGroup
+          direction="horizontal"
+          className="w-full min-h-screen rounded-lg border"
+        >
+          <ResizablePanel defaultSize={0}>
+            <div className="flex h-[200px] items-center justify-center p-6">
+              <span className="font-semibold">Preview of your resume</span>
+            </div>
+          </ResizablePanel>
+          <ResizableHandle
+            withHandle
+            className="bg-transparent relative border-r-[1px]  w-[10px] mr-[1rem]"
+          ></ResizableHandle>
+          <ResizablePanel>
+            <Outlet />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
       <div className="fixed bottom-0 w-full flex py-2 mt-auto  items-center justify-center place-content-center   gap-4 ">
         <div className="my-auto border-2 border-primary/10 w-fit flex dark:backdrop-blur-3xl dark:bg-black/50 backdrop-blur-2xl bg-transparent items-center justify-center px-4 py-2 gap-2 rounded-full">
           <ModeToggle />
@@ -64,7 +90,7 @@ export default function Dashboard() {
                     ? "  " + className
                     : "text-gray-400 " + className;
                 }}
-                to={`/resume/id1/${item.link}`}
+                to={`/${id}/resume/${item.link}`}
                 prefetch="intent"
               >
                 <TooltipProvider>
