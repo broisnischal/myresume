@@ -9,10 +9,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function List() {
   return (
-    <>
+    <div>
       <h1>list of your resume</h1>
       <Outlet />
-    </>
+    </div>
   );
 }
 // export function ErrorBoundary() {

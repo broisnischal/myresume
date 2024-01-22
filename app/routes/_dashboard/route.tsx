@@ -1,13 +1,39 @@
 import { retriveUser } from "@/utils/auth.utils.server";
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
-
-import navigation from "./navigation.json";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+  NavLink,
+  Outlet,
+  useFetcher,
+  useLoaderData,
+  useSubmit,
+} from "@remix-run/react";
+import navigation from "./resume.$id/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ModeToggle } from "@/components/common/mode-toggler";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User } from "@prisma/client";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = retriveUser(request);
+  const user = await retriveUser(request);
 
-  return user;
+  return json({
+    user,
+  });
 }
 
 export default function Dashboard() {
@@ -15,55 +41,80 @@ export default function Dashboard() {
 
   console.log(data);
 
-  const showNotification = () => {
-    // Code to request notification permission and show a notification
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
-        new Notification("Bruh you clicked notification!", {
-          body: "Hi i am broisnees and i am learning to build the web better.",
-          icon: "/favicon.ico",
-          renotify: true,
-          requireInteraction: true,
-          tag: "hello-notification",
-          image: "/favicon.ico",
-          data: {
-            url: "https://example.com",
-            date: new Date().toLocaleString(),
-          },
-          vibrate: [100, 50, 100],
-        });
-      }
-    });
-  };
+  const submit = useSubmit();
+
+  const user: User = data.user;
+
+  console.log(user);
 
   return (
     <>
-      {/* <h1>My Resume</h1> */}
-
-      <div className="flex w-full gap-4 py-5 items-center justify-center">
-        {navigation.map((item, index) => {
-          return (
-            <div key={index}>
+      <Outlet />
+      <div className="fixed bottom-0 w-full flex py-2 mt-auto  items-center justify-center place-content-center   gap-4 ">
+        <div className="my-auto border-2 border-primary/10 w-fit flex dark:backdrop-blur-3xl dark:bg-black/50 backdrop-blur-2xl bg-transparent items-center justify-center px-4 py-2 gap-2 rounded-full">
+          <ModeToggle />
+          {navigation.map((item, index) => {
+            return (
               <NavLink
+                key={index}
                 className={({ isActive }) => {
                   const className =
-                    "px-5 grid place-content-center min-h-[30px] py-1 text-[14px] capitalize";
+                    "px-5 grid bg-white dark:bg-black/10 aspect-square w-10 h-10 shadow-sm bg-transparent border-[1px] dark:border-white/10 border-black/5 rounded-full place-content-center ";
                   return isActive
-                    ? "bg-black text-white  rounded-full  " + className
-                    : "text-gray-500 " + className;
+                    ? "  " + className
+                    : "text-gray-400 " + className;
                 }}
                 to={`/resume/id1/${item.link}`}
+                prefetch="intent"
               >
-                {item.name}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{item.icon}</TooltipTrigger>
+                    <TooltipContent>
+                      <p className="capitalize">{item.name}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </NavLink>
-            </div>
-          );
-        })}
+            );
+          })}
+          <div>
+            <DropdownMenu onOpenChange={() => {}}>
+              <DropdownMenuTrigger>
+                <Avatar className="border-[1px]">
+                  {user.avatar_url && <AvatarImage src={user.avatar_url} />}
+                  <AvatarFallback>
+                    {String(user.name?.split(" ")).split("")[0].toUpperCase()}
+                    {String(user.name?.split(" ")[1])
+                      .split("")[0]
+                      .toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  Profile
+                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem>Billing</DropdownMenuItem>
+                <DropdownMenuItem>Subscription</DropdownMenuItem>
+                {/* <logout.Form method="post" action="/logout"> */}
+                <DropdownMenuItem
+                  onClick={() => submit("/logout", { method: "post" })}
+                >
+                  <input type="text" hidden name="_intent" value="logout" />
+                  <button className="w-full text-left" type="submit">
+                    Logout
+                  </button>
+                </DropdownMenuItem>
+                {/* </logout.Form> */}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </div>
-
-      <button onClick={showNotification}>Show Notification</button>
-
-      <Outlet />
     </>
   );
 }
