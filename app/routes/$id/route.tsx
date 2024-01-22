@@ -34,6 +34,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { HomeIcon } from "@radix-ui/react-icons";
+import { MonitorDot } from "lucide-react";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await retriveUser(request);
@@ -105,6 +107,26 @@ export default function Dashboard() {
               </NavLink>
             );
           })}
+          <NavLink
+            className={({ isActive }) => {
+              const className =
+                "px-5 grid bg-white dark:bg-black/10 aspect-square w-10 h-10 shadow-sm bg-transparent border-[1px] dark:border-white/10 border-black/5 rounded-full place-content-center ";
+              return isActive ? "  " + className : "text-gray-400 " + className;
+            }}
+            to={`/main`}
+            prefetch="intent"
+          >
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <MonitorDot size={20} />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="capitalize">Main</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </NavLink>
           <div>
             <DropdownMenu onOpenChange={() => {}}>
               <DropdownMenuTrigger>

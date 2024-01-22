@@ -58,9 +58,10 @@ import FieldInput from "@/factory/FieldInput";
 import { SubmitButton } from "@/factory/SubmitButton";
 import FieldSwitch from "@/factory/FieldSwitch";
 import { createToastHeaders } from "@/utils/toast.server";
-import { Resume } from "@prisma/client";
+import { Resume, User } from "@prisma/client";
 import moment from "moment";
 import { Badge } from "@/components/ui/badge";
+import Delete from "./delete";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await retriveUser(request);
@@ -95,86 +96,118 @@ const clientValidator = withZod(schema);
 export async function action({ request }: ActionFunctionArgs) {
   const user = await retriveUser(request);
 
-  const serverValidator = withZod(
-    schema.refine(
-      async (data) => {
-        const slugAvailable = await db.resume.isSlugAvailable(data.name);
-        return slugAvailable;
-      },
-      {
-        message: "Whoops! That resume name is taken.",
-        path: ["username"],
+  const formData = await request.formData();
+
+  const intent = formData.get("_intent");
+
+  switch (intent) {
+    case "create": {
+      const serverValidator = withZod(
+        schema.refine(
+          async (data) => {
+            const slugAvailable = await db.resume.isSlugAvailable(data.name);
+            return slugAvailable;
+          },
+          {
+            message: "Whoops! That resume name is taken.",
+            path: ["username"],
+          }
+        )
+      );
+
+      const result = await serverValidator.validate(formData);
+
+      if (result.error) {
+        const toastHeaders = await createToastHeaders({
+          type: "error",
+          title: "Whoops!",
+          description: "Resume name is not available.",
+        });
+
+        return json(
+          {
+            result,
+          },
+          {
+            headers: toastHeaders,
+          }
+        );
       }
-    )
-  );
 
-  const result = await serverValidator.validate(await request.formData());
+      const { name, publicResume, templateResume } = result.data;
 
-  if (result.error) {
-    const toastHeaders = await createToastHeaders({
-      type: "error",
-      title: "Whoops!",
-      description: "Resume name is not available.",
-    });
+      const newResume = await db.resume.create({
+        data: {
+          name,
+          slug: name,
+          public: publicResume,
+          template: templateResume,
+          userId: user.id,
+        },
+      });
 
-    return json(
-      {
-        result,
-      },
-      {
-        headers: toastHeaders,
-      }
-    );
-  }
-
-  const { name, publicResume, templateResume } = result.data;
-
-  const newResume = await db.resume.create({
-    data: {
-      name,
-      slug: name,
-      public: publicResume,
-      template: templateResume,
-      userId: user.id,
-    },
-  });
-
-  return json<{ success: boolean; newResume: Resume }>(
-    {
-      success: true,
-      newResume,
-    },
-    {
-      headers: await createToastHeaders({
-        type: "success",
-        title: "Success!",
-        description: "Resume created successfully.",
-      }),
+      return json<{ success: boolean; newResume: Resume }>(
+        {
+          success: true,
+          newResume,
+        },
+        {
+          headers: await createToastHeaders({
+            type: "success",
+            title: "Success!",
+            description: "Resume created successfully.",
+          }),
+        }
+      );
     }
-  );
+    case "delete": {
+      const resumeId = formData.get("id") as string;
+      const resume = await db.resume.delete({
+        where: {
+          id: resumeId,
+        },
+      });
 
-  // switch (intent) {
-  //   case "create": {
-  //     const newResume = await db.resume.create({
-  //       data: {
-  //         name: "New Resume",
-  //         userId: user.id,
-  //       },
-  //     });
+      if (resume) {
+        return json(
+          {
+            success: true,
+          },
+          {
+            headers: await createToastHeaders({
+              type: "success",
+              title: "Success!",
+              description: "Resume deleted successfully.",
+            }),
+          }
+        );
+      }
 
-  //     return json({ formData });
-  //   }
-  //   default: {
-  //     throw new Error(`Invalid intent: ${intent}`);
-  //   }
-  // }
+      const toastHeaders = await createToastHeaders({
+        type: "error",
+        title: "Whoops!",
+        description: "Resume not available to delete.",
+      });
+
+      return json(
+        {
+          success: false,
+        },
+        {
+          headers: toastHeaders,
+        }
+      );
+    }
+
+    default: {
+      return null;
+    }
+  }
 }
 
 export default function Main() {
   const data = useLoaderData<typeof loader>();
   const user = data.user;
-
-  console.log(data.resumeofuser);
 
   const actiondata = useActionData<typeof action>();
 
@@ -233,7 +266,8 @@ export default function Main() {
       </div>
       <Separator className="h-[3rem]" />
 
-      <div className="box grid [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]  gap-5 gap-y-10">
+      {/* [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))]  */}
+      <div className="box flex flex-wrap gap-5 gap-y-10">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="h-[300px]  aspect-square" variant="outline">
@@ -355,7 +389,7 @@ export function ResumeCard({ resume }: { resume: Resume }) {
         </div>
 
         <div className="button self-end">
-          <Trash2Icon className="cursor-pointer" size={15} />
+          <Delete item={resume} />
         </div>
       </div>
     </div>
