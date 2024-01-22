@@ -2,10 +2,10 @@ import { redirect } from "@remix-run/node";
 import authenticator from "./auth.server";
 import type { User, UserType } from "@prisma/client";
 
-export async function retriveUser(request: Request) {
-  const user = await authenticator.isAuthenticated(request, {
+export async function retriveUser(request: Request): Promise<User> {
+  const user = (await authenticator.isAuthenticated(request, {
     failureRedirect: "/auth/login",
-  });
+  })) as User;
   return user;
 }
 

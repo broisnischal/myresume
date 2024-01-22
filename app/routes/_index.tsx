@@ -8,6 +8,7 @@ import { parse } from "@conform-to/zod";
 import { createToastHeaders } from "@/utils/toast.server";
 import { useForm } from "@conform-to/react";
 import { db } from "@/db/db.server";
+import { useRef } from "react";
 
 // import { Toaster } from "sonner";
 
@@ -143,9 +144,9 @@ export default function Index() {
 
 export function NewsLetter() {
   const newsletter = useFetcher();
+  const ref = useRef<HTMLInputElement>(null);
 
-  // const navigation = useNavigation();
-  // const lastSubmission = newsletter.data;
+  const isSubmitting = newsletter.formData?.get("_intent") === "subscribe";
 
   const [form, fields] = useForm({
     id: "user",
@@ -154,8 +155,6 @@ export function NewsLetter() {
     },
     shouldValidate: "onSubmit",
   });
-
-  // const isSending =
 
   return (
     <div className="min-h-[50vh] w-[90vw] m-auto flex flex-col lg:flex-row items-start lg:items-center justify-evenly">
@@ -173,22 +172,18 @@ export function NewsLetter() {
           {...form.props}
         >
           <Input
+            ref={ref}
             className="min-w-[30vw]"
             placeholder="Suscribe to our newsletter"
             {...fields.email}
           />
 
           <input type="hidden" name="_intent" value="subscribe" />
-          <Button type="submit" variant="outline">
-            Subscribe
+          <Button disabled={isSubmitting} type="submit" variant="outline">
+            {isSubmitting ? "Loading..." : "Subscribe"}
           </Button>
         </newsletter.Form>
         <div className="text-red-400 text-[14px]">{fields.email.error}</div>
-
-        {/* <p className="max-w-[70%]">
-          Got it! Please go check your email to confirm your subscription,
-          otherwise you won't get our email.
-        </p> */}
       </div>
     </div>
   );

@@ -10,9 +10,9 @@ const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
     sameSite: "lax",
     secrets: ["s3cr3t"],
-    ...(isProduction
-      ? { domain: "myresume.fly.app", secure: true }
-      : { domain: "localhost", secure: false }),
+    // ...(isProduction
+    //   ? { domain: "myresume.fly.app", secure: true }
+    //   : { domain: "localhost", secure: false }),
   },
 });
 
