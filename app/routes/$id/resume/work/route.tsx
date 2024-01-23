@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -301,88 +302,180 @@ export default function LinkPage() {
         </button>
       </fetcher.Form> */}
 
-      <div className="w-1/2">
-        <ValidatedForm
-          method="post"
-          id="work-form"
-          resetAfterSubmit
-          validator={clientValidator}
-        >
-          <CardHeader>
-            <CardTitle className="text-2xl">Add your Work/Education</CardTitle>
-            <CardDescription>
-              Add your work and education to your resume
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-6">
-            <div className="grid gap-2">
-              <FieldInput
-                label="Name"
-                id="name"
-                name="name"
-                placeholder="Please enter your name, i.e company or instutute"
-              />
-              <FieldInput
-                label="Name"
-                id="where"
-                name="where"
-                placeholder="Please enter your name, i.e company or instutute"
-              />
-            </div>
-            <div className="flex  gap-2">
-              <div className="grid gap-2 w-full">
+      <Tabs defaultValue="experience" className="">
+        <TabsList>
+          <TabsTrigger value="experience">Experience</TabsTrigger>
+          <TabsTrigger value="education">Education</TabsTrigger>
+        </TabsList>
+        <TabsContent tabIndex={-1} value="experience">
+          <div className="w-1/2">
+            <ValidatedForm
+              method="post"
+              id="work-form"
+              resetAfterSubmit
+              validator={clientValidator}
+            >
+              <CardHeader>
+                <CardTitle className="text-2xl">Add your Experience</CardTitle>
+                <CardDescription>
+                  Add your Experience and education to your resume
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-6">
+                <div className="grid gap-2">
+                  <FieldInput
+                    label="Company Name"
+                    id="name"
+                    name="name"
+                    placeholder="Google"
+                  />
+                  <FieldInput
+                    label="Position"
+                    id="where"
+                    name="where"
+                    placeholder="Sr. DevOps Engineer"
+                  />
+                </div>
+                <div className="flex  gap-2">
+                  <div className="grid gap-2 w-full">
+                    <FieldInput
+                      label="Start Date"
+                      id="startDate"
+                      name="startDate"
+                      type="date"
+                    />
+                  </div>
+                  <div className="grid gap-2 w-full">
+                    <FieldInput
+                      label="End date"
+                      id="endDate"
+                      name="endDate"
+                      type="date"
+                    />
+                  </div>
+                  {/* <div className="grid gap-2 h-min w-fit">
+                    <Label htmlFor="type">Type</Label>
+                    <Select name="type" defaultValue="work">
+                      <SelectTrigger id="Select">
+                        <SelectValue placeholder="Choose Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="education">Education</SelectItem>
+                        <SelectItem value="work">Work</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div> */}
+                </div>
+                <input type="text" hidden name="_intent" value={"create"} />
+                <input type="text" hidden name="id" value={resumeId} />
                 <FieldInput
-                  label="Start Date"
-                  id="startDate"
-                  name="startDate"
-                  type="date"
+                  type="textarea"
+                  id="desc"
+                  label="Description"
+                  name="desc"
+                  placeholder="Please elaborate your experience."
                 />
-              </div>
-              <div className="grid gap-2 w-full">
-                <FieldInput
-                  label="End date"
-                  id="endDate"
-                  name="endDate"
-                  type="date"
-                />
-              </div>
-              <div className="grid gap-2 h-min w-fit">
-                <Label htmlFor="type">Type</Label>
-                <Select name="type" defaultValue="work">
-                  <SelectTrigger id="Select">
-                    <SelectValue placeholder="Choose Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="education">Education</SelectItem>
-                    <SelectItem value="work">Work</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <input type="text" hidden name="_intent" value={"create"} />
-            <input type="text" hidden name="id" value={resumeId} />
-            <FieldInput
-              type="textarea"
-              id="desc"
-              label="Description"
-              name="desc"
-              placeholder="Please include all information relevant to your issue."
-            />
-          </CardContent>
-          <CardFooter className=" space-x-2">
-            <Button variant="outline">Reset</Button>
-            <SubmitButton />
-          </CardFooter>
-        </ValidatedForm>
-      </div>
-
-      {works.map((item, index) => {
-        return (
-          <div key={index}>
-            <h1>{item.title}</h1>
+              </CardContent>
+              <CardFooter className=" space-x-2">
+                <Button variant="outline" type="button">
+                  Clear
+                </Button>
+                <SubmitButton label="Add Experience" />
+              </CardFooter>
+            </ValidatedForm>
           </div>
-        );
-      })}
+
+          {works.map((item, index) => {
+            return (
+              <div key={index}>
+                <h1>{item.title}</h1>
+              </div>
+            );
+          })}
+        </TabsContent>
+        <TabsContent tabIndex={-1} value="education">
+          <div className="w-1/2">
+            <ValidatedForm
+              method="post"
+              id="work-form"
+              resetAfterSubmit
+              validator={clientValidator}
+            >
+              <CardHeader>
+                <CardTitle className="text-2xl">Add your Education</CardTitle>
+                <CardDescription>
+                  Add your work and education to your resume
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid gap-6">
+                <div className="grid gap-2">
+                  <FieldInput
+                    label="Instution"
+                    id="where"
+                    name="where"
+                    placeholder="Harvard University"
+                  />
+                  <FieldInput
+                    label="Degree"
+                    id="name"
+                    name="name"
+                    placeholder="Master of Science"
+                  />
+                  <FieldInput
+                    label="Field"
+                    id="field"
+                    name="field"
+                    placeholder="Physics"
+                  />
+                </div>
+                <div className="flex  gap-2">
+                  <div className="grid gap-2 w-full">
+                    <FieldInput
+                      label="Start Date"
+                      id="startDate"
+                      name="startDate"
+                      type="date"
+                    />
+                  </div>
+                  <div className="grid gap-2 w-full">
+                    <FieldInput
+                      label="End date"
+                      id="endDate"
+                      name="endDate"
+                      type="date"
+                    />
+                  </div>
+                  {/* <div className="grid gap-2 h-min w-fit">
+                    <Label htmlFor="type">Type</Label>
+                    <Select name="type" defaultValue="work">
+                      <SelectTrigger id="Select">
+                        <SelectValue placeholder="Choose Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="education">Education</SelectItem>
+                        <SelectItem value="work">Work</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div> */}
+                </div>
+                <input type="text" hidden name="_intent" value={"create"} />
+                <input type="text" hidden name="id" value={resumeId} />
+                <FieldInput
+                  type="textarea"
+                  id="desc"
+                  label="Description"
+                  name="desc"
+                  placeholder="Elaborate something about your education."
+                />
+              </CardContent>
+              <CardFooter className=" space-x-2">
+                <Button variant="outline">Reset</Button>
+                <SubmitButton label="Add Education" />
+              </CardFooter>
+            </ValidatedForm>
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* <AlertDialog>
         <AlertDialogTrigger asChild>

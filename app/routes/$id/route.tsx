@@ -6,6 +6,7 @@ import {
   json,
 } from "@remix-run/node";
 import {
+  Link,
   NavLink,
   Outlet,
   useActionData,
@@ -43,9 +44,15 @@ import { MonitorDot } from "lucide-react";
 import { db } from "@/db/db.server";
 import { useEffect, useState } from "react";
 import { cookie } from "@/session.server";
+import { tosBannerCookie } from "@/cookie.server";
+import Banner, { LastUpdatedDate } from "./cookie-banner";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await retriveUser(request);
+
+  const cookieHeader = request.headers.get("Cookie");
+
+  const cookie = await tosBannerCookie.parse(cookieHeader);
 
   const resume = await db.resume.findUnique({
     where: {
@@ -53,24 +60,24 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     },
   });
 
-  const cookiedata = await cookie.parse(request.headers.get("cookie"));
-
-  console.log(cookiedata);
-
-  console.log("asdf");
-
-  const defaultsize = 50;
+  if (cookie) {
+    return json({
+      user,
+      resume,
+      showBanner: cookie.dateTOSRead < LastUpdatedDate,
+    });
+  }
 
   return json(
     {
       user,
       resume,
-      defaultsize: cookiedata.defaultValue?.defaultsize || defaultsize,
+      showBanner: true,
     },
     {
       headers: {
-        "Set-Cookie": await cookie.serialize({
-          defaultsize: cookiedata.defaultValue?.defaultsize || defaultsize,
+        "Set-Cookie": await tosBannerCookie.serialize({
+          dateTOSRead: 0,
         }),
       },
     }
@@ -78,66 +85,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  // const defaultValue = await cookie.parse(request.headers.get("cookie"));
-
-  // const defaultsize = request.headers.get("defaultsize");
-
-  const formdata = await request.formData();
-
-  const size = formdata.get("size");
-
-  console.log(size);
-
-  const serializedCookie = await cookie.serialize({
-    defaultsize: size,
-  });
-
-  console.log(serializedCookie);
-
-  return json(
-    {},
-    {
-      headers: {
-        "Set-Cookie": serializedCookie,
-      },
-    }
-  );
+  return null;
 }
 
 export default function Dashboard() {
-  const { user: userr, resume } = useLoaderData<typeof loader>();
+  const submit = useSubmit();
+
+  const { user: userr, resume, showBanner } = useLoaderData<typeof loader>();
+
+  const { id } = useParams();
+  const user: User = userr;
 
   const actiondata = useActionData<typeof action>();
 
-  console.log(actiondata);
-
-  console.log();
-
-  let defaultsize;
-
-  const { id } = useParams();
-
-  const submit = useSubmit();
-
-  const user: User = userr;
-
-  // const [defaultsize, setDefaultSize] = useState(
-  //   typeof window !== "undefined" && localStorage.getItem("defaultsize")
-  // );
-
-  // useEffect(() => {
-  //   // const def = localStorage.getItem("defaultsize");
-
-  //   // if (def) {
-  //   //   setDefaultSize(JSON.parse(def));
-  //   // }
-
-  //   localStorage.setItem("defaultsize", JSON.stringify(defaultsize || 0));
-  // }, [defaultsize]);
-
   return (
     <>
-      <div className="flex">
+      <div className="flex noise">
         <ResizablePanelGroup
           direction="horizontal"
           className="w-full min-h-screen rounded-lg border"
@@ -145,7 +108,6 @@ export default function Dashboard() {
           <ResizablePanel
             defaultSize={Number(0)}
             onResize={(size) => {
-              submit({ size }, { method: "post", navigate: false });
               // setDefaultSize(size);
             }}
           >
@@ -248,6 +210,7 @@ export default function Dashboard() {
             </DropdownMenu>
           </div>
         </div>
+        {showBanner && <Banner />}
       </div>
     </>
   );
