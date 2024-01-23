@@ -3,7 +3,7 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   return authenticator.authenticate("github", request, {
-    successRedirect: "/resume",
+    successRedirect: "/main",
     failureRedirect: "/auth/login",
   });
 }
