@@ -9,13 +9,13 @@ export default function Features() {
                 style={{
                   WebkitBackgroundClip: "text",
                 }}
-                className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500"
+                className="text-5xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500"
               >
                 Discover Our Unique Features
               </h1>
-              <p className="max-w-[600px] text-zinc-200 md:text-xl dark:text-zinc-100 mx-auto">
+              <p className="max-w-[600px] w-[70%] text-zinc-200 md:text-xl dark:text-zinc-100 mx-auto">
                 Our features are designed to enhance your boost your resume and
-                streamline your workflow.
+                make it more engaging.
               </p>
             </div>
             <div className="w-full max-w-full space-y-4 mx-auto">

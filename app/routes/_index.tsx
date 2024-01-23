@@ -10,6 +10,8 @@ import { useForm } from "@conform-to/react";
 import { db } from "@/db/db.server";
 import { useRef } from "react";
 import { FacebookIcon } from "lucide-react";
+import { ModeToggle } from "@/components/common/mode-toggler";
+import { Badge } from "@/components/ui/badge";
 
 // import { Toaster } from "sonner";
 
@@ -85,16 +87,16 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 dark:bg-black dark:text-zinc-100 ">
-        <div className="container px-4 md:px-6">
+      <section className="w-full  py-12 md:py-24 lg:py-32 xl:py-48 dark:bg-black dark:text-zinc-100 ">
+        <div className="container px-4 md:px-6 filter-noise ">
           <div className="grid gap-6 items-center">
-            <div className="flex flex-col justify-center space-y-4 text-center">
+            <div className="flex flex-col  justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h1
                   style={{
                     WebkitBackgroundClip: "text",
                   }}
-                  className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r dark:from-white from-black dark:to-gray-500 to-gray-500"
+                  className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r dark:from-white from-black dark:to-gray-500 to-gray-500"
                 >
                   Revolutionize Your Resume Creation
                 </h1>
@@ -126,6 +128,7 @@ export default function Index() {
                       </span>
                     </div>
                   </Link>
+                  <ModeToggle />
                 </div>
               </div>
               {/* <Link to={"/main"}>
@@ -135,6 +138,7 @@ export default function Index() {
           </div>
         </div>
       </section>
+      <Confession />
 
       <Features />
 
@@ -160,8 +164,8 @@ export function NewsLetter() {
   });
 
   return (
-    <div className="min-h-[50vh] w-[90vw] m-auto flex flex-col lg:flex-row items-start lg:items-center justify-evenly">
-      <div className="flex flex-col gap-3 ">
+    <div className="min-h-[50vh] w-[80vw] m-auto flex flex-col lg:flex-row items-start lg:items-center justify-evenly">
+      <div className="flex  flex-col gap-3 ">
         <h2 className="text-4xl font-bold">Newsletter</h2>
         <p className="text-balance max-w-[350px]">
           We are working hard to create this among you, all Developers. Stay
@@ -194,12 +198,12 @@ export function NewsLetter() {
 
 export function Footer() {
   return (
-    <footer className="dark flex items-center justify-between px-6 py-4 bg-white border-t border-t-gray-200 text-secondary">
+    <footer className="dark flex flex-col gap-4 md:flex-row items-center justify-between px-6 py-4 bg-white dark:bg-black/90 dark:text-white border-t border-t-gray-200 dark:border-t-gray-800 text-secondary">
       <div>
         <p className="text-sm">© 2024 Your Company. All rights reserved.</p>
       </div>
 
-      <nav className="space-x-4">
+      <nav className="space-x-4 flex flex-row ">
         <Link className="text-sm " to="/contact">
           Contact
         </Link>
@@ -211,5 +215,101 @@ export function Footer() {
         </Link>
       </nav>
     </footer>
+  );
+}
+
+export function Confession() {
+  return (
+    <div className="flex flex-col  min-h-screen">
+      <Badge className="w-fit blur-none self-center translate-y-7 m-4">
+        Upcoming
+      </Badge>
+      <main className="flex-1">
+        {/* <section className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
+                Welcome back, Developer!
+              </h1>
+              <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+                Here are your recent activities.
+              </p>
+            </div>
+          </div>
+        </section> */}
+        <section className="w-full h-fit py-12 md:py-24 blur-[2px] noise lg:py-32 border-t">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-10 sm:px-10 md:gap-16 md:grid-cols-2">
+              <div className="space-y-4">
+                <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">
+                  Activity
+                </div>
+                <h2 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
+                  You have 10 unread confessions.
+                </h2>
+                <Link
+                  className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+                  to="/"
+                >
+                  View Messages
+                </Link>
+              </div>
+              <div className="flex flex-col items-start space-y-4">
+                <div className="flex gap-2">
+                  <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">
+                    Quick Links
+                  </div>
+                  <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">
+                    Bio
+                  </div>
+                </div>
+                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed dark:text-gray-400">
+                  Here are some quick features to commonly used tools and
+                  resources.
+                </p>
+                <div className="grid w-[min(550px,100%)] grid-cols-2 gap-4">
+                  <Link
+                    className="group border grid h-auto w-full items-start justify-start gap-1 rounded-md bg-white p-4 text-sm font-medium transition-colors  focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:bg-black"
+                    href="#"
+                  >
+                    <div className="text-sm font-medium leading-none group-hover:underline">
+                      Testimonials
+                    </div>
+                    <div className="line-clamp-2 text-sm leading-snug text-gray-500 dark:text-gray-400">
+                      Get your testimonials and get the options to add them into
+                      your resume.
+                    </div>
+                  </Link>
+
+                  <Link
+                    className="group border grid h-auto w-full items-start justify-start gap-1 rounded-md bg-white p-4 text-sm font-medium transition-colors  focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:bg-black"
+                    href="#"
+                  >
+                    <div className="text-sm font-medium leading-none group-hover:underline">
+                      Github contribution
+                    </div>
+                    <div className="line-clamp-2 text-sm leading-snug text-gray-500 dark:text-gray-400">
+                      Github Contribution chart is available for your resume.
+                    </div>
+                  </Link>
+
+                  <Link
+                    className="group border grid h-auto w-full items-start justify-start gap-1 rounded-md bg-white p-4 text-sm font-medium transition-colors  focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:bg-black"
+                    href="#"
+                  >
+                    <div className="text-sm font-medium leading-none group-hover:underline">
+                      Anonomous Confession
+                    </div>
+                    <div className="line-clamp-2 text-sm leading-snug text-gray-500 dark:text-gray-400">
+                      Anonomous Confession is available for your resume.
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
