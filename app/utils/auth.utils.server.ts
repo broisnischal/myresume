@@ -9,16 +9,13 @@ export async function retriveUser(request: Request): Promise<User> {
   return user;
 }
 
-export async function verifyUser(
-  request: Request,
-  type: UserType
-): Promise<User> {
+export async function verifyUser(request: Request, type: UserType) {
   const user = (await authenticator.isAuthenticated(request, {
     failureRedirect: "/auth/login",
   })) as User;
 
   if (user.usertype !== type) {
-    return redirect("/auth/login") as unknown as User;
+    throw redirect("/auth/login");
   }
   return user;
 }
