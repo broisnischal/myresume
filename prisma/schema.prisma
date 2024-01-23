@@ -81,6 +81,19 @@ model Works {
   @@index([resumeId])
 }
 
+model Education {
+  id        String   @id @default(cuid())
+  title     String
+  institute String
+  desc      String?
+  startDate DateTime
+  endDate   DateTime
+  resumeId  String?
+  resume    Resume?  @relation(fields: [resumeId], references: [id])
+
+  @@index([resumeId])
+}
+
 enum EventAnalytics {
   RESUME_CLICK
   LINK_CLICK
@@ -155,6 +168,7 @@ model Resume {
   skills    Skills[]
   projects  Projects[]
   analytics Analytics[]
+  Education Education[]
 }
 
 model Settings {

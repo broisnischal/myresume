@@ -9,8 +9,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function List() {
   return (
-    <div>
-      <h1>list of your resume</h1>
+    <div className="p-5">
+      {/* <h1 className="text-3xl font-bold">Your resume</h1> */}
       <Outlet />
     </div>
   );

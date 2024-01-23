@@ -22,13 +22,15 @@ import { Toaster } from "./components/ui/sonner";
 import { useToast } from "./utils/toaster";
 import { getToast } from "./utils/toast.server";
 import { combineHeaders } from "./utils/misc";
+import { cssBundleHref } from "@remix-run/css-bundle";
+// import sonnerstyle from "sonner";
 
 export const links: LinksFunction = () => [
   {
     href: styles,
     rel: "stylesheet",
   },
-  // ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
 export async function loader({ request }: LoaderFunctionArgs) {

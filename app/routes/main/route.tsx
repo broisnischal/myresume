@@ -1,7 +1,6 @@
 // import { useLoaderData } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import { zfd } from "zod-form-data";
-
 import {
   Dialog,
   DialogClose,
@@ -16,9 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { withZod } from "@remix-validated-form/with-zod";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -162,39 +159,46 @@ export async function action({ request }: ActionFunctionArgs) {
     }
     case "delete": {
       const resumeId = formData.get("id") as string;
-      const resume = await db.resume.delete({
+
+      const existsresume = await db.resume.findUnique({
         where: {
           id: resumeId,
         },
       });
 
-      if (resume) {
+      if (!existsresume) {
+        const toastHeaders = await createToastHeaders({
+          type: "error",
+          title: "Whoops!",
+          description: "Resume not available to delete.",
+        });
+
         return json(
           {
-            success: true,
+            success: false,
           },
           {
-            headers: await createToastHeaders({
-              type: "success",
-              title: "Success!",
-              description: "Resume deleted successfully.",
-            }),
+            headers: toastHeaders,
           }
         );
       }
 
-      const toastHeaders = await createToastHeaders({
-        type: "error",
-        title: "Whoops!",
-        description: "Resume not available to delete.",
+      let resume = await db.resume.delete({
+        where: {
+          id: resumeId,
+        },
       });
 
       return json(
         {
-          success: false,
+          success: true,
         },
         {
-          headers: toastHeaders,
+          headers: await createToastHeaders({
+            type: "success",
+            title: "Success!",
+            description: "Resume deleted successfully.",
+          }),
         }
       );
     }

@@ -33,8 +33,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import { HomeIcon } from "@radix-ui/react-icons";
 import { MonitorDot } from "lucide-react";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -79,8 +77,8 @@ export default function Dashboard() {
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
-      <div className="fixed bottom-0 w-full flex py-2 mt-auto  items-center justify-center place-content-center   gap-4 ">
-        <div className="my-auto border-2 border-primary/10 w-fit flex dark:backdrop-blur-3xl dark:bg-black/50 backdrop-blur-2xl bg-transparent items-center justify-center px-4 py-2 gap-2 rounded-full">
+      <div className="fixed bottom-0 w-full flex py-2 mt-auto  items-center justify-center place-content-center gap-4 ">
+        <div className="my-auto border-[1px] border-primary/10 w-fit flex dark:backdrop-blur-3xl dark:bg-black/50 backdrop-blur-2xl bg-transparent items-center justify-center px-4 py-2 gap-2 rounded-full">
           <ModeToggle />
           {navigation.map((item, index) => {
             return (
@@ -127,7 +125,7 @@ export default function Dashboard() {
               </Tooltip>
             </TooltipProvider>
           </NavLink>
-          <div>
+          <div className="grid place-content-center">
             <DropdownMenu onOpenChange={() => {}}>
               <DropdownMenuTrigger>
                 <Avatar className="border-[1px]">
