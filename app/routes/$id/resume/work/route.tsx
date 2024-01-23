@@ -601,11 +601,27 @@ export default function LinkPage() {
               </ValidatedForm>
             </div>
 
-            <div>
+            <div className="flex flex-col gap-4 w-1/2">
               {Array.from(education).map((item, index) => (
-                <div key={index} className="flex space-x-8 items-start ">
-                  {item.institute}
-                </div>
+                <Card key={item.id} className="min-w-full">
+                  <CardHeader>
+                    <CardTitle>{item.title}</CardTitle>
+                    <CardDescription>{item.desc}</CardDescription>
+                    <strong className="text-[14px]">
+                      {item.institute} | Special in {item.field}
+                    </strong>
+
+                    <p>
+                      from{" "}
+                      <strong>
+                        {moment(item.startDate).format("MMM YYYY")}
+                      </strong>{" "}
+                      to{" "}
+                      <strong>{moment(item.endDate).format("MMM YYYY")}</strong>
+                    </p>
+                  </CardHeader>
+                  {/* <CardContent></CardContent> */}
+                </Card>
               ))}
             </div>
           </div>
