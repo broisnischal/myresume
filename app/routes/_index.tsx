@@ -9,6 +9,7 @@ import { createToastHeaders } from "@/utils/toast.server";
 import { useForm } from "@conform-to/react";
 import { db } from "@/db/db.server";
 import { useRef } from "react";
+import { FacebookIcon } from "lucide-react";
 
 // import { Toaster } from "sonner";
 
@@ -138,6 +139,8 @@ export default function Index() {
       <Features />
 
       <NewsLetter />
+
+      <Footer />
     </div>
   );
 }
@@ -186,5 +189,27 @@ export function NewsLetter() {
         <div className="text-red-400 text-[14px]">{fields.email.error}</div>
       </div>
     </div>
+  );
+}
+
+export function Footer() {
+  return (
+    <footer className="dark flex items-center justify-between px-6 py-4 bg-white border-t border-t-gray-200 text-secondary">
+      <div>
+        <p className="text-sm">© 2024 Your Company. All rights reserved.</p>
+      </div>
+
+      <nav className="space-x-4">
+        <Link className="text-sm " to="/contact">
+          Contact
+        </Link>
+        <Link className="text-sm " to="/privacy-policy">
+          Privacy Policy
+        </Link>
+        <Link className="text-sm " to="/cookie/policy">
+          Cookie Policy
+        </Link>
+      </nav>
+    </footer>
   );
 }

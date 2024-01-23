@@ -66,7 +66,7 @@ export default function Features() {
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-white">
-                    Seamless Integration
+                    Links Integrations
                   </h2>
                   <p className="text-zinc-200 dark:text-zinc-100">
                     Seamless Integration allows you to connect with your
@@ -118,7 +118,7 @@ export default function Features() {
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-white">
-                    Powerful Search
+                    Searching Templates
                   </h2>
                   <p className="text-zinc-200 dark:text-zinc-100">
                     Our Powerful Search feature allows you to find any email,
@@ -144,7 +144,7 @@ export default function Features() {
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-white">
-                    Reliable Security
+                    Github Chart Integration
                   </h2>
                   <p className="text-zinc-200 dark:text-zinc-100">
                     With Reliable Security, your data is always safe and
@@ -170,9 +170,7 @@ export default function Features() {
                       <path d="m20 22-5-5" />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-bold text-white">
-                    Easy Collaboration
-                  </h2>
+                  <h2 className="text-xl font-bold text-white">Testimonials</h2>
                   <p className="text-zinc-200 dark:text-zinc-100">
                     Easy Collaboration allows you to share and edit documents
                     with your team in real time.
