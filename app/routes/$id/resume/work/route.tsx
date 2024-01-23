@@ -45,6 +45,7 @@ import { ValidatedForm, useIsValid } from "remix-validated-form";
 import FieldInput from "@/factory/FieldInput";
 import { SubmitButton } from "@/factory/SubmitButton";
 import { zfd } from "zod-form-data";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const schema = z.object({
   name: zfd.text(
@@ -308,52 +309,55 @@ export default function LinkPage() {
           <TabsTrigger value="education">Education</TabsTrigger>
         </TabsList>
         <TabsContent tabIndex={-1} value="experience">
-          <div className="w-1/2">
-            <ValidatedForm
-              method="post"
-              id="work-form"
-              resetAfterSubmit
-              validator={clientValidator}
-            >
-              <CardHeader>
-                <CardTitle className="text-2xl">Add your Experience</CardTitle>
-                <CardDescription>
-                  Add your Experience and education to your resume
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-6">
-                <div className="grid gap-2">
-                  <FieldInput
-                    label="Company Name"
-                    id="name"
-                    name="name"
-                    placeholder="Google"
-                  />
-                  <FieldInput
-                    label="Position"
-                    id="where"
-                    name="where"
-                    placeholder="Sr. DevOps Engineer"
-                  />
-                </div>
-                <div className="flex  gap-2">
-                  <div className="grid gap-2 w-full">
+          <div className="flex">
+            <div className="w-1/2">
+              <ValidatedForm
+                method="post"
+                id="work-form"
+                resetAfterSubmit
+                validator={clientValidator}
+              >
+                <CardHeader>
+                  <CardTitle className="text-2xl">
+                    Add your Experience
+                  </CardTitle>
+                  <CardDescription>
+                    Add your Experience and education to your resume
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-6">
+                  <div className="grid gap-2">
                     <FieldInput
-                      label="Start Date"
-                      id="startDate"
-                      name="startDate"
-                      type="date"
+                      label="Company Name"
+                      id="name"
+                      name="name"
+                      placeholder="Google"
+                    />
+                    <FieldInput
+                      label="Position"
+                      id="where"
+                      name="where"
+                      placeholder="Sr. DevOps Engineer"
                     />
                   </div>
-                  <div className="grid gap-2 w-full">
-                    <FieldInput
-                      label="End date"
-                      id="endDate"
-                      name="endDate"
-                      type="date"
-                    />
-                  </div>
-                  {/* <div className="grid gap-2 h-min w-fit">
+                  <div className="flex  gap-2">
+                    <div className="grid gap-2 w-full">
+                      <FieldInput
+                        label="Start Date"
+                        id="startDate"
+                        name="startDate"
+                        type="date"
+                      />
+                    </div>
+                    <div className="grid gap-2 w-full">
+                      <FieldInput
+                        label="End date"
+                        id="endDate"
+                        name="endDate"
+                        type="date"
+                      />
+                    </div>
+                    {/* <div className="grid gap-2 h-min w-fit">
                     <Label htmlFor="type">Type</Label>
                     <Select name="type" defaultValue="work">
                       <SelectTrigger id="Select">
@@ -365,33 +369,56 @@ export default function LinkPage() {
                       </SelectContent>
                     </Select>
                   </div> */}
-                </div>
-                <input type="text" hidden name="_intent" value={"create"} />
-                <input type="text" hidden name="id" value={resumeId} />
-                <FieldInput
-                  type="textarea"
-                  id="desc"
-                  label="Description"
-                  name="desc"
-                  placeholder="Please elaborate your experience."
-                />
-              </CardContent>
-              <CardFooter className=" space-x-2">
-                <Button variant="outline" type="button">
-                  Clear
-                </Button>
-                <SubmitButton label="Add Experience" />
-              </CardFooter>
-            </ValidatedForm>
+                  </div>
+                  <input type="text" hidden name="_intent" value={"create"} />
+                  <input type="text" hidden name="id" value={resumeId} />
+                  <FieldInput
+                    type="textarea"
+                    id="desc"
+                    label="Description"
+                    name="desc"
+                    placeholder="Please elaborate your experience."
+                  />
+                </CardContent>
+                <CardFooter className=" space-x-2">
+                  <Button variant="outline" type="button">
+                    Clear
+                  </Button>
+                  <SubmitButton label="Add Experience" />
+                </CardFooter>
+              </ValidatedForm>
+            </div>
+            <div className="flex items-center justify-center w-1/2 ">
+              <div className="flex justify-center flex-col ">
+                {Array.from({ length: 5 }).map((item, index) => (
+                  <div key={index} className="flex space-x-8 ">
+                    <div className="text-gray-500 dark:text-gray-400">
+                      Jan 2024 - Present
+                    </div>
+                    <div className="flex-1 border-l-2 border-gray-200 py-4 dark:border-gray-800 relative pl-4">
+                      {/* <div className="absolute -left-2.5 top-0 bg-gray-200 dark:bg-gray-800 rounded-full h-3 w-3" /> */}
+                      <div className="absolute left-[-34px] rounded-full  lg:left-[-7px]">
+                        <div className="h-[10px] w-[10px] rounded-full border  bg-gray-900" />
+                      </div>
+                      <h4 className="text-lg font-bold">Software Engineer</h4>
+                      <p className="text-gray-500 dark:text-gray-400">OpenAI</p>
+                      <p className="mt-2 text-sm">
+                        Working on the GPT-4 project.
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {works.map((item, index) => {
+          {/* {works.map((item, index) => {
             return (
               <div key={index}>
                 <h1>{item.title}</h1>
               </div>
             );
-          })}
+          })} */}
         </TabsContent>
         <TabsContent tabIndex={-1} value="education">
           <div className="w-1/2">
