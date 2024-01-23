@@ -1,8 +1,14 @@
 import { retriveUser } from "@/utils/auth.utils.server";
-import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  createCookie,
+  json,
+} from "@remix-run/node";
 import {
   NavLink,
   Outlet,
+  useActionData,
   useFetcher,
   useLoaderData,
   useParams,
@@ -34,27 +40,100 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MonitorDot } from "lucide-react";
+import { db } from "@/db/db.server";
+import { useEffect, useState } from "react";
+import { cookie } from "@/session.server";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await retriveUser(request);
 
-  return json({
-    user,
+  const resume = await db.resume.findUnique({
+    where: {
+      id: params.id,
+    },
   });
+
+  const cookiedata = await cookie.parse(request.headers.get("cookie"));
+
+  console.log(cookiedata);
+
+  console.log("asdf");
+
+  const defaultsize = 50;
+
+  return json(
+    {
+      user,
+      resume,
+      defaultsize: cookiedata.defaultValue?.defaultsize || defaultsize,
+    },
+    {
+      headers: {
+        "Set-Cookie": await cookie.serialize({
+          defaultsize: cookiedata.defaultValue?.defaultsize || defaultsize,
+        }),
+      },
+    }
+  );
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  // const defaultValue = await cookie.parse(request.headers.get("cookie"));
+
+  // const defaultsize = request.headers.get("defaultsize");
+
+  const formdata = await request.formData();
+
+  const size = formdata.get("size");
+
+  console.log(size);
+
+  const serializedCookie = await cookie.serialize({
+    defaultsize: size,
+  });
+
+  console.log(serializedCookie);
+
+  return json(
+    {},
+    {
+      headers: {
+        "Set-Cookie": serializedCookie,
+      },
+    }
+  );
 }
 
 export default function Dashboard() {
-  const data = useLoaderData<typeof loader>();
+  const { user: userr, resume } = useLoaderData<typeof loader>();
+
+  const actiondata = useActionData<typeof action>();
+
+  console.log(actiondata);
+
+  console.log();
+
+  let defaultsize;
 
   const { id } = useParams();
 
-  console.log(data);
-
   const submit = useSubmit();
 
-  const user: User = data.user;
+  const user: User = userr;
 
-  console.log(user);
+  // const [defaultsize, setDefaultSize] = useState(
+  //   typeof window !== "undefined" && localStorage.getItem("defaultsize")
+  // );
+
+  // useEffect(() => {
+  //   // const def = localStorage.getItem("defaultsize");
+
+  //   // if (def) {
+  //   //   setDefaultSize(JSON.parse(def));
+  //   // }
+
+  //   localStorage.setItem("defaultsize", JSON.stringify(defaultsize || 0));
+  // }, [defaultsize]);
 
   return (
     <>
@@ -63,9 +142,17 @@ export default function Dashboard() {
           direction="horizontal"
           className="w-full min-h-screen rounded-lg border"
         >
-          <ResizablePanel defaultSize={0}>
-            <div className="flex h-[200px] items-center justify-center p-6">
-              <span className="font-semibold">Preview of your resume</span>
+          <ResizablePanel
+            defaultSize={Number(0)}
+            onResize={(size) => {
+              submit({ size }, { method: "post", navigate: false });
+              // setDefaultSize(size);
+            }}
+          >
+            <div className="flex flex-col h-[200px] items-center justify-center p-6">
+              <h1 className="font-semibold">Preview of your resume</h1>
+              <br />
+              <h1>{resume?.name}</h1>
             </div>
           </ResizablePanel>
           <ResizableHandle
@@ -78,7 +165,7 @@ export default function Dashboard() {
         </ResizablePanelGroup>
       </div>
       <div className="fixed bottom-0 w-full flex py-2 mt-auto  items-center justify-center place-content-center gap-4 ">
-        <div className="my-auto border-[1px] border-primary/10 w-fit flex dark:backdrop-blur-3xl dark:bg-black/50 backdrop-blur-2xl bg-transparent items-center justify-center px-4 py-2 gap-2 rounded-full">
+        <div className="my-auto border-[1px] border-primary/10 w-fit flex dark:backdrop-blur-3xl dark:bg-black/50 backdrop-blur-2xl bg-transparent items-center justify-center px-2 py-2 gap-2 rounded-full">
           <ModeToggle />
           {navigation.map((item, index) => {
             return (
