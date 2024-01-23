@@ -9,7 +9,7 @@ export default function Features() {
                 style={{
                   WebkitBackgroundClip: "text",
                 }}
-                className="text-5xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500"
+                className="text-6xl font-bold tracking-tighter sm:text-5xl mb-5 xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500"
               >
                 Discover Our Unique Features
               </h1>
