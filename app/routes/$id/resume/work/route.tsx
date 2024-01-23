@@ -45,9 +45,9 @@ import { ValidatedForm, useIsValid } from "remix-validated-form";
 import FieldInput from "@/factory/FieldInput";
 import { SubmitButton } from "@/factory/SubmitButton";
 import { zfd } from "zod-form-data";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import moment from "moment";
 
-const schema = z.object({
+const exSchema = z.object({
   name: zfd.text(
     z
       .string({
@@ -57,6 +57,7 @@ const schema = z.object({
         message: "Name is required",
       })
   ),
+  location: zfd.text(z.string().optional()),
   where: zfd.text(
     z.string().min(1, {
       message: " Where is required",
@@ -82,20 +83,23 @@ const schema = z.object({
   // resumeId: z.string().min(1),
 });
 
-type Entry = z.infer<typeof schema>;
+type Entry = z.infer<typeof exSchema>;
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const id = params.id;
-  const works = await db.works.findMany({
+  const experience = await db.experience.findMany({
     where: {
       resumeId: id,
     },
+    orderBy: {
+      endDate: "desc",
+    },
   });
 
-  return json({ works });
+  return json({ experience });
 }
 
-const clientValidator = withZod(schema);
+const exClientValidator = withZod(exSchema);
 
 export async function action({ request }: ActionFunctionArgs) {
   const user = await retriveUser(request);
@@ -106,7 +110,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   switch (intent) {
     case "create": {
-      const serverValidator = withZod(schema);
+      const serverValidator = withZod(exSchema);
 
       const result = await serverValidator.validate(formData);
 
@@ -126,7 +130,8 @@ export async function action({ request }: ActionFunctionArgs) {
         );
       }
 
-      const { id, desc, endDate, name, startDate, type, where } = result.data;
+      const { id, desc, endDate, name, startDate, type, where, location } =
+        result.data;
 
       if (type === "education") {
         const newEducation = await db.education.create({
@@ -154,13 +159,14 @@ export async function action({ request }: ActionFunctionArgs) {
           }
         );
       } else if (type === "work") {
-        const newEducation = await db.works.create({
+        const newExperience = await db.experience.create({
           data: {
             title: name,
             company: where,
+            location: location,
             desc,
-            startDate: new Date(startDate),
-            endDate: new Date(endDate),
+            startDate: startDate,
+            endDate: endDate,
             resumeId: id,
           },
         });
@@ -168,7 +174,7 @@ export async function action({ request }: ActionFunctionArgs) {
         return json(
           {
             success: true,
-            newEducation,
+            newExperience,
           },
           {
             headers: await createToastHeaders({
@@ -262,7 +268,7 @@ export default function LinkPage() {
 
   const resumeId = params.id;
 
-  let { works } = useLoaderData<typeof loader>();
+  let { experience } = useLoaderData<typeof loader>();
 
   // const fetcher = useFetcher();
 
@@ -277,7 +283,7 @@ export default function LinkPage() {
     return memo;
   }, []);
 
-  works = [...works, ...values];
+  experience = [...experience, ...values];
 
   const project = {
     starred: true,
@@ -315,7 +321,7 @@ export default function LinkPage() {
                 method="post"
                 id="work-form"
                 resetAfterSubmit
-                validator={clientValidator}
+                validator={exClientValidator}
               >
                 <CardHeader>
                   <CardTitle className="text-2xl">
@@ -329,14 +335,14 @@ export default function LinkPage() {
                   <div className="grid gap-2">
                     <FieldInput
                       label="Company Name"
-                      id="name"
-                      name="name"
+                      id="where"
+                      name="where"
                       placeholder="Google"
                     />
                     <FieldInput
                       label="Position"
-                      id="where"
-                      name="where"
+                      id="name"
+                      name="name"
                       placeholder="Sr. DevOps Engineer"
                     />
                   </div>
@@ -372,6 +378,7 @@ export default function LinkPage() {
                   </div>
                   <input type="text" hidden name="_intent" value={"create"} />
                   <input type="text" hidden name="id" value={resumeId} />
+                  <input hidden name="type" value="work" readOnly />
                   <FieldInput
                     type="textarea"
                     id="desc"
@@ -388,37 +395,31 @@ export default function LinkPage() {
                 </CardFooter>
               </ValidatedForm>
             </div>
-            <div className="flex items-center justify-center w-1/2 ">
-              <div className="flex justify-center flex-col ">
-                {Array.from({ length: 5 }).map((item, index) => (
-                  <div key={index} className="flex space-x-8 ">
-                    <div className="text-gray-500 dark:text-gray-400">
-                      Jan 2024 - Present
+            <div className="flex items-center justify-center w-1/2 h-full">
+              <div className="flex justify-center items-center flex-col w-[500px] ">
+                {Array.from(experience).map((item, index) => (
+                  <div key={index} className="flex space-x-8 items-start ">
+                    <div className="text-gray-500 dark:text-gray-400 w-[150px] mt-2">
+                      {moment(item.startDate).format("MMM YYYY")} -{" "}
+                      {new Date(item.endDate).valueOf() > new Date().valueOf()
+                        ? "Present"
+                        : moment(item.endDate).format("MMM YYYY")}
                     </div>
-                    <div className="flex-1 border-l-2 border-gray-200 py-4 dark:border-gray-800 relative pl-4">
-                      {/* <div className="absolute -left-2.5 top-0 bg-gray-200 dark:bg-gray-800 rounded-full h-3 w-3" /> */}
-                      <div className="absolute left-[-34px] rounded-full  lg:left-[-7px]">
+                    <div className="flex-1 border-l-2 border-black/80 py-4 dark:border-black relative pl-4">
+                      <div className="absolute left-[-34px] rounded-full h-[14px] bg-white border-2 grid place-content-center w-[14px] lg:left-[-7px]">
                         <div className="h-[10px] w-[10px] rounded-full border  bg-gray-900" />
                       </div>
-                      <h4 className="text-lg font-bold">Software Engineer</h4>
-                      <p className="text-gray-500 dark:text-gray-400">OpenAI</p>
-                      <p className="mt-2 text-sm">
-                        Working on the GPT-4 project.
+                      <h4 className="text-lg font-bold">{item.title}</h4>
+                      <p className="text-gray-500 dark:text-gray-400">
+                        {item.company}
                       </p>
+                      <p className="mt-2 text-sm max-w-[200px]">{item.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-
-          {/* {works.map((item, index) => {
-            return (
-              <div key={index}>
-                <h1>{item.title}</h1>
-              </div>
-            );
-          })} */}
         </TabsContent>
         <TabsContent tabIndex={-1} value="education">
           <div className="w-1/2">
@@ -426,7 +427,7 @@ export default function LinkPage() {
               method="post"
               id="work-form"
               resetAfterSubmit
-              validator={clientValidator}
+              validator={exClientValidator}
             >
               <CardHeader>
                 <CardTitle className="text-2xl">Add your Education</CardTitle>
@@ -503,83 +504,6 @@ export default function LinkPage() {
           </div>
         </TabsContent>
       </Tabs>
-
-      {/* <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button className="w-fit" variant={"outline"}>
-            Add Work <Plus size={15} />
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent className="w-[400px]">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are your work</AlertDialogTitle>
-
-            <AlertDialogDescription>
-              add your work{" "}
-              <strong className="text-primary">experience </strong>.
-            </AlertDialogDescription>
-
-            <Form method="post" id="add-work" className="flex flex-col gap-4">
-              <Input
-                // onChange={(e) => setDeleteInput(e.target.value)}
-                type="text"
-                name="title"
-                placeholder="Work Title"
-              />
-              <Input
-                // onChange={(e) => setDeleteInput(e.target.value)}
-                type="text"
-                name="company"
-                placeholder="Company Name"
-              />
-              <Textarea name="desc" placeholder="Short work description" />
-              <Label htmlFor="startDate">Start Date</Label>
-              <Input
-                placeholder="Start Date"
-                type="date"
-                name="startDate"
-                id="startDate"
-                required
-              />
-              <input
-                type="hidden"
-                name="resumeId"
-                // defaultValue={resumeData.id}
-              />
-              <Label htmlFor="endDate">End Date</Label>
-              <Input placeholder="End Date" type="date" name="endDate" />
-            </Form>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Form method="post">
-							<input type="hidden" value={item.id} name="id" />
-							<Button
-								disabled={deleteInput !== `delete ${item.label}`}
-								type="submit"
-								name="_action"
-								value={"delete"}
-							>
-								{state === "submitting" ? (
-									<LoaderIcon size={14} className="animate-spin" />
-								) : (
-									"Delete"
-								)}
-							</Button>
-						</Form>
-            <AlertDialogAction className=" p-0" form="add-skill" id="add-skill">
-              <Button
-                id="add-work"
-                name="_action"
-                value={"add-work"}
-                form="add-work"
-              >
-                Save work
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog> */}
     </div>
   );
 }
