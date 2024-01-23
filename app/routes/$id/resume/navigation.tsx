@@ -19,7 +19,7 @@ type NavigationItem = {
 const navigation: NavigationItem[] = [
   {
     name: "Home",
-    link: "",
+    link: "/",
     icon: <HomeIcon size={20} className="" />,
   },
   {
