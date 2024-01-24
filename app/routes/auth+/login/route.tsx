@@ -30,14 +30,14 @@ export default function Login() {
         <p className="px-8 text-center text-[18px] text-balance max-w-[90%] m-auto text-muted-foreground">
           By clicking continue, you agree to our{" "}
           <Link
-            to="/terms"
+            to="/terms-condition"
             className="underline underline-offset-4 hover:text-primary"
           >
             Terms of Service
           </Link>{" "}
           and{" "}
           <Link
-            to="/privacy"
+            to="/privacy-policy"
             className="underline underline-offset-4 hover:text-primary"
           >
             Privacy Policy

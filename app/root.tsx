@@ -17,6 +17,7 @@ import {
 } from "remix-themes";
 import { themeSessionResolver } from "./session.server";
 import styles from "./tailwind.css";
+import sonner from "./sonner.css";
 import ProgessBar from "./components/common/progess-bar";
 import { Toaster } from "./components/ui/sonner";
 import { useToast } from "./utils/toaster";
@@ -29,6 +30,10 @@ import { tosBannerCookie } from "./cookie.server";
 export const links: LinksFunction = () => [
   {
     href: styles,
+    rel: "stylesheet",
+  },
+  {
+    href: sonner,
     rel: "stylesheet",
   },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
