@@ -83,6 +83,30 @@ model Experience {
   @@map("Works")
 }
 
+model Refrences {
+  id          String  @id @default(cuid())
+  name        String
+  company     String
+  position    String
+  location    String?
+  contact     String
+  description String
+  portfolio   String?
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id])
+}
+
+model Award {
+  id          String  @id @default(cuid())
+  title       String
+  subtitle    String
+  year        String
+  description String?
+  Resume      Resume? @relation(fields: [resumeId], references: [id])
+  resumeId    String?
+}
+
 model Education {
   id        String   @id @default(cuid())
   title     String
@@ -135,12 +159,21 @@ model Projects {
   @@index([resumeId])
 }
 
+enum SKILLTYPE {
+  STACKS
+  INTEREST
+  HOBBY
+  LANGUAGE
+  OTHER
+}
+
 model Skills {
-  id       String  @id @default(cuid())
+  id       String    @id @default(cuid())
   name     String
   value    Int
+  type     SKILLTYPE
   resumeId String?
-  Resume   Resume? @relation(fields: [resumeId], references: [id])
+  Resume   Resume?   @relation(fields: [resumeId], references: [id])
 
   @@index([resumeId])
 }
@@ -173,6 +206,8 @@ model Resume {
 
   education Education[]
   analytics Analytics[]
+  refrences Refrences[]
+  awards    Award[]
 }
 
 model Settings {

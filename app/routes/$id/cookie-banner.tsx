@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useFetcher, useLocation } from "@remix-run/react";
 import moment from "moment";
 
-export const LastUpdatedDate = new Date("01/23/2024").valueOf();
+export const LastUpdatedDate = new Date("01/24/2024").valueOf();
 
 export default function Banner() {
   const fetcher = useFetcher();
