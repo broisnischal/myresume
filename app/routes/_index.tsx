@@ -106,9 +106,7 @@ export default function Index() {
                 </h1>
 
                 <p className="max-w-[600px] text-black/90 md:text-xl dark:text-zinc-100 mx-auto">
-                  Join us and create your beautiful looking resume, search for
-                  your matching degination resume and create your own via
-                  templating it!
+                Craft an impressive resume effortlessly with us! Explore our curated templates, find the perfect design for your desired position, and easily create your own professional resume with ease.
                 </p>
 
                 <div className="m-auto flex items-center justify-center">
