@@ -36,6 +36,10 @@ export const links: LinksFunction = () => [
     href: sonner,
     rel: "stylesheet",
   },
+  {
+    rel: "stylesheet",
+    href: "https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900",
+  },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
@@ -45,7 +49,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { toast, headers: toastHeaders } = await getToast(request);
 
   return json(
-    { toast, theme: getTheme() },
+    {
+      toast,
+      theme: getTheme(),
+    },
     { headers: combineHeaders(toastHeaders) }
   );
 }

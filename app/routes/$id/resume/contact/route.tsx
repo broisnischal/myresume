@@ -1,10 +1,11 @@
 import FieldInput from "@/factory/FieldInput";
+import { SubmitButton } from "@/factory/SubmitButton";
 import { ValidatedForm } from "remix-validated-form";
 
 export default function LinkPage() {
   return (
     <div className="container ">
-      <h2 className="text-3xl font-bold mb-5">Contact Information</h2>
+      <h2 className="text-3xl  py-2 mb-5">Contact Information</h2>
 
       <ValidatedForm className="flex flex-col gap-3 w-1/2">
         <FieldInput
@@ -31,6 +32,13 @@ export default function LinkPage() {
           name="address"
           type="address"
         />
+        <FieldInput
+          placeholder="Your website (optional)"
+          label="Website"
+          name="website"
+          type="website"
+        />
+        <SubmitButton label="Update" />
       </ValidatedForm>
     </div>
   );

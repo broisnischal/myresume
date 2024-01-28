@@ -57,15 +57,28 @@ model User {
   github_bio       String?
 
   usertype   UserType     @default(FREE)
-  userImages Image?       @relation(fields: [imageId], references: [id])
+  userImages Image?       @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   imageId    String?
   session    Session[]
   password   Password?
-  role       Role?        @relation(fields: [roleId], references: [id])
+  role       Role?        @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roleId     String?
   connection Connection[]
   resume     Resume[]
   social     Socials[]
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  username  String?
+  email     String?
+  phone     String?
+  address   String?
+  website   String?
+  resumeId  String
+  resume    Resume   @relation(fields: [resumeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Experience {
@@ -173,7 +186,7 @@ model Skills {
   value    Int
   type     SKILLTYPE
   resumeId String?
-  Resume   Resume?   @relation(fields: [resumeId], references: [id])
+  resume   Resume?   @relation(fields: [resumeId], references: [id])
 
   @@index([resumeId])
 }
@@ -208,6 +221,7 @@ model Resume {
   analytics Analytics[]
   refrences Refrences[]
   awards    Award[]
+  Contact   Contact[]
 }
 
 model Settings {

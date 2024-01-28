@@ -1,6 +1,7 @@
 // import { useLoaderData } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import { zfd } from "zod-form-data";
+import slugify from "slugify";
 import {
   Dialog,
   DialogClose,
@@ -31,6 +32,7 @@ import {
   useActionData,
   useFetcher,
   useLoaderData,
+  useLocation,
   useSubmit,
 } from "@remix-run/react";
 import {
@@ -72,9 +74,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json<{
     user: User;
     resumeofuser: Resume[];
+    hosturl: string;
   }>({
     user,
     resumeofuser,
+    hosturl: process.env.HOST_URL!,
   });
 }
 
@@ -136,7 +140,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const newResume = await db.resume.create({
         data: {
           name,
-          slug: name,
+          slug: slugify(name),
           public: publicResume,
           template: templateResume,
           userId: user.id,
@@ -159,6 +163,8 @@ export async function action({ request }: ActionFunctionArgs) {
     }
     case "delete": {
       const resumeId = formData.get("id") as string;
+
+      console.log(resumeId);
 
       const existsresume = await db.resume.findUnique({
         where: {
@@ -183,7 +189,7 @@ export async function action({ request }: ActionFunctionArgs) {
         );
       }
 
-      let resume = await db.resume.delete({
+      await db.resume.delete({
         where: {
           id: resumeId,
         },
@@ -359,6 +365,13 @@ export default function Main() {
 }
 
 export function ResumeCard({ resume }: { resume: Resume }) {
+  const location = useLocation();
+  const data = useLoaderData<typeof loader>();
+  const url = location.pathname;
+
+  console.log(url);
+  // const searchQuery = new URLSearchParams(location.search).get("q");
+
   return (
     <div className="flex hover:shadow-sm overflow-hidden flex-col  h-[300px] aspect-square border-[1px] rounded-md">
       <Link
@@ -372,8 +385,12 @@ export function ResumeCard({ resume }: { resume: Resume }) {
       <div className="bottom flex flex-col h-full items-start p-5">
         <h1 className="capitalize text-lg">{resume.name}</h1>
         <p className="previewlink text-[15px] text-purple-500 font-bold tracking-tight">
-          <a href={`/${resume.slug}`} target="_blank" rel="noopener noreferrer">
-            {"https://localhost:3000/" + resume.slug}
+          <a
+            href={`/r/${resume.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {`${data.hosturl}/r/${resume.slug}`}
           </a>
         </p>
 

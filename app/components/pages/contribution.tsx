@@ -24,12 +24,12 @@ export const ContributionBox = ({
     <div className="">
       <div
         className={cn(
-          "h-3 relative group w-3 rounded-[2px] [outline:1px_solid_#1b1f230f] outline-offset-[-1px]  cursor-auto  ",
-          level === 0 && "bg-[#161b22]",
-          level === 1 && "bg-[#0e4429]",
-          level === 2 && "bg-[#006d32]",
-          level === 3 && "bg-[#26a641]",
-          level === 4 && "bg-[#39d353]",
+          " relative group w-[10px] aspect-square rounded-[2px] [outline:1px_solid_#1b1f230f] outline-offset-[-1px]  cursor-auto  ",
+          level === 0 && "dark:bg-[#161b22] bg-[#ebedf0]",
+          level === 1 && "dark:bg-[#0e4429] bg-[#9be9a8]",
+          level === 2 && "dark:bg-[#006d32] bg-[#40c463]",
+          level === 3 && "dark:bg-[#26a641] bg-[#30a14e]",
+          level === 4 && "dark:bg-[#39d353] bg-[#216e39]",
           className
         )}
       >
