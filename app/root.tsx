@@ -24,7 +24,7 @@ import { useToast } from "./utils/toaster";
 import { getToast } from "./utils/toast.server";
 import { combineHeaders } from "./utils/misc";
 import { cssBundleHref } from "@remix-run/css-bundle";
-import { tosBannerCookie } from "./cookie.server";
+// import { tosBannerCookie } from "./cookie.server";
 // import sonnerstyle from "sonner";
 
 export const links: LinksFunction = () => [

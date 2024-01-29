@@ -262,7 +262,10 @@ export default function Main() {
               <DropdownMenuItem>Subscription</DropdownMenuItem>
               {/* <logout.Form method="post" action="/logout"> */}
               <DropdownMenuItem
-                onClick={() => submit("/logout", { method: "post" })}
+                onClick={(e) => {
+                  e.preventDefault();
+                  submit("/logout", { method: "post" });
+                }}
               >
                 <input type="text" hidden name="_intent" value="logout" />
                 <button className="w-full text-left" type="submit">

@@ -12,6 +12,7 @@ import {
   useActionData,
   useFetcher,
   useLoaderData,
+  useLocation,
   useParams,
   useSubmit,
 } from "@remix-run/react";
@@ -44,7 +45,7 @@ import { MonitorDot } from "lucide-react";
 import { db } from "@/db/db.server";
 import { useEffect, useState } from "react";
 import { cookie } from "@/session.server";
-import { tosBannerCookie } from "@/cookie.server";
+import { resizeCookie, tosBannerCookie } from "@/cookie.server";
 import Banner, { LastUpdatedDate } from "./cookie-banner";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -53,6 +54,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const cookieHeader = request.headers.get("Cookie");
 
   const cookie = await tosBannerCookie.parse(cookieHeader);
+  const sizecookie = await resizeCookie.parse(cookieHeader);
 
   const resume = await db.resume.findUnique({
     where: {
@@ -64,9 +66,25 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return json({
       user,
       resume,
+      sizecookie,
       showBanner: cookie.dateTOSRead < LastUpdatedDate,
     });
   }
+
+  const headers = new Headers();
+  headers.append(
+    "set-cookie",
+    await tosBannerCookie.serialize({
+      dateTOSRead: 0,
+    })
+  );
+
+  headers.append(
+    "set-cookie",
+    await resizeCookie.serialize({
+      size: 0,
+    })
+  );
 
   return json(
     {
@@ -75,11 +93,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       showBanner: true,
     },
     {
-      headers: {
-        "Set-Cookie": await tosBannerCookie.serialize({
-          dateTOSRead: 0,
-        }),
-      },
+      headers,
     }
   );
 }
@@ -91,8 +105,16 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Dashboard() {
   const submit = useSubmit();
 
-  const { user: userr, resume, showBanner } = useLoaderData<typeof loader>();
+  const {
+    user: userr,
+    resume,
+    showBanner,
+    sizecookie,
+  } = useLoaderData<typeof loader>();
 
+  const { pathname, search } = useLocation();
+
+  console.log(sizecookie.size);
   const { id } = useParams();
   const user: User = userr;
 
@@ -106,9 +128,17 @@ export default function Dashboard() {
           className="w-full min-h-screen rounded-lg border"
         >
           <ResizablePanel
-            defaultSize={Number(0)}
+            defaultSize={Number(sizecookie.size)}
             onResize={(size) => {
-              // setDefaultSize(size);
+              submit(
+                { size, redirectTo: pathname + search },
+                {
+                  method: "post",
+                  navigate: false,
+                  fetcherKey: "resize",
+                  action: "/resize-size",
+                }
+              );
             }}
           >
             <div className="flex flex-col h-[200px] items-center justify-center p-6">
@@ -120,7 +150,7 @@ export default function Dashboard() {
           <ResizableHandle
             withHandle
             className="bg-transparent relative border-r-[1px]  w-[10px] mr-[1rem]"
-          ></ResizableHandle>
+          />
           <ResizablePanel>
             <Outlet />
           </ResizablePanel>
@@ -137,8 +167,8 @@ export default function Dashboard() {
                   const className =
                     "px-5 grid bg-white dark:bg-black/10 aspect-square w-10 h-10 shadow-sm bg-transparent border-[1px] dark:border-white/10 border-black/5 rounded-full place-content-center ";
                   return isActive
-                    ? "  " + className
-                    : "text-gray-400 " + className;
+                    ? `  ${className}`
+                    : `text-gray-400 ${className}`;
                 }}
                 to={`/${id}/resume/${item.link}`}
                 prefetch="intent"

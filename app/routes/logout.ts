@@ -8,6 +8,8 @@ export default async function action({ request }: ActionFunctionArgs) {
 
   console.log(intent);
 
+  console.log("logout");
+
   switch (intent) {
     case "logout": {
       return await authenticator.logout(request, {

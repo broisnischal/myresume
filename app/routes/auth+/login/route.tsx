@@ -1,11 +1,19 @@
 import { Button } from "@/components/ui/button";
+import { redirectIfLoggedIn } from "@/utils";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, Link } from "@remix-run/react";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  await redirectIfLoggedIn(request);
+  return null;
+}
 
 export default function Login() {
   return (
     <section className="flex flex-col items-center max-h-[100%] justify-center min-h-[50vh] px-4 py-8 border-b bg-gray-50/55 dark:bg-black/70">
       <Form action="/auth/github" method="post">
         <Button className="flex items-center space-x-4 py-2" variant="default">
+          {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
           <svg
             className=" w-6 h-6 text-white dark:text-black"
             fill="none"
