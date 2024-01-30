@@ -1,151 +1,105 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/db/db.server";
 import { retriveUser } from "@/utils/auth.utils.server";
-import { User } from "@prisma/client";
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  json,
-  unstable_createMemoryUploadHandler,
-  unstable_parseMultipartFormData,
-} from "@remix-run/node";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
-import { Camera } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-
-const MAX_SIZE = 1024 * 1024 * 2; // 2MB
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import { Form, useLoaderData, useSubmit } from "@remix-run/react";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = (await retriveUser(request)) as User;
+  const user = await retriveUser(request);
 
-  const userImage = await db.image.findFirst({
-    where: {
-      User: {
-        some: {
-          id: user.id,
-        },
-      },
-    },
-  });
-
-  return json({ userImage, user });
-}
-
-export async function action({ request }: ActionFunctionArgs) {
-  const user = (await retriveUser(request)) as User;
-
-  const formData = await unstable_parseMultipartFormData(
-    request,
-    unstable_createMemoryUploadHandler({
-      maxPartSize: MAX_SIZE,
-    })
+  const svgldata = await fetch("http://localhost:3000/icons.json").then((res) =>
+    res.json()
   );
 
-  const file = formData.get("image") as File;
-
-  const contentType = file.type;
-  const blob = Buffer.from(await file.arrayBuffer());
-
-  await db.$transaction(async (tx) => {
-    await tx.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        userImages: {
-          upsert: {
-            create: {
-              contentType,
-              blob,
-            },
-            update: {
-              contentType,
-              blob,
-            },
-          },
-        },
-      },
-    });
+  return json({
+    user,
+    svgldata,
   });
-
-  return json({ blob, contentType });
 }
 
-export default function CreateResume() {
-  const [image, setImage] = useState<File | null>(null);
-  // const fetcher = useFetcher();
-  const { userImage } = useLoaderData<typeof loader>();
+export async function action({ request, params }: ActionFunctionArgs) {
+  const formdata = await request.formData();
+  const { id } = params;
 
-  const navigation = useNavigation();
+  const intent = formdata.get("_intent");
 
-  const isUploading = navigation.state !== "idle";
+  switch (intent) {
+    case "create": {
+      const skills = formdata.get("name") as unknown as string;
 
-  //   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {};
+      const ifalredy = await db.skills.findFirst({
+        where: {
+          name: skills,
+          resumeId: id,
+        },
+      });
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    if (file.size > MAX_SIZE) {
-      //   alert("File size exceeds the limit of 2MB");
-      toast.error("File size exceeds the limit of 2MB");
-      return;
+      // remove and toggle
+
+      if (ifalredy) {
+        await db.skills.delete({
+          where: {
+            id: ifalredy?.id,
+          },
+        });
+        break;
+      }
+
+      const newskill = await db.skills.create({
+        data: {
+          name: skills,
+          type: "STACKS",
+          resumeId: id,
+          value: 1,
+        },
+      });
+      // break;
+
+      console.log(newskill);
+
+      return newskill;
     }
-    setImage(file);
-  };
+  }
+
+  return json({ ok: true });
+}
+
+export default function AddSkills() {
+  const submit = useSubmit();
+  const { svgldata, user } = useLoaderData<typeof loader>();
 
   return (
     <div>
-      <h1>Create Resume</h1>
-      <Form method="post" encType="multipart/form-data">
-        {isUploading ? (
-          <Skeleton className="w-32 h-32 opacity-40 rounded-full ">
-            <img
-              src={URL.createObjectURL(image!)}
-              alt=""
-              loading="lazy"
-              className="w-32 cursor-pointer h-32 rounded-full object-cover object-center overflow-hidden"
-            />
-          </Skeleton>
-        ) : image ? (
-          <label htmlFor="image-uploader">
-            <img
-              src={URL.createObjectURL(image)}
-              alt=""
-              loading="lazy"
-              className="w-32 cursor-pointer h-32 rounded-full object-cover object-center overflow-hidden"
-            />
-          </label>
-        ) : userImage?.id ? (
-          <label
-            htmlFor="image-uploader"
-            className="cursor-pointer w-32 h-32 bg-black/10 text-primary/70 rounded-full flex items-center justify-center"
+      <h1 className="text-3xl mb-5">Add Skills</h1>
+
+      <div className="flex gap-4 flex-wrap items-center ">
+        {svgldata.map((svgdata, i) => (
+          <Form
+            key={i}
+            onClick={() => {
+              submit(
+                {
+                  _intent: "create",
+                  name: String(svgdata.name),
+                  svg: svgdata.svg,
+                },
+                { method: "post", navigate: false }
+              );
+            }}
+            className="flex bg-white dark:text-black cursor-pointer group flex-col aspect-square w-[100px] justify-center items-center gap-2 border-[1px] p-4 "
           >
-            <img
-              src={`/resources/img/${userImage.id}`}
-              className="w-32 h-32 rounded-full overflow-hidden object-center object-cover"
-              alt=""
+            <div
+              className="w-[10%] group:active:animate-ping grid place-content-center aspect-square object-fill "
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+              dangerouslySetInnerHTML={{
+                __html: svgdata.svg,
+              }}
             />
-          </label>
-        ) : (
-          <label
-            htmlFor="image-uploader"
-            className="cursor-pointer w-32 h-32 bg-black/10 text-primary/70 rounded-full flex items-center justify-center"
-          >
-            <Camera size={30} />
-          </label>
-        )}
-        <input
-          type="file"
-          hidden
-          name="image"
-          onChange={handleFileChange}
-          accept="image/*"
-          id="image-uploader"
-        />
-        <button>Upload</button>
-      </Form>
+            {/* {svgdata.file} */}
+
+            <h2 className="font-bold capitalize">{svgdata.name}</h2>
+          </Form>
+        ))}
+      </div>
     </div>
   );
 }

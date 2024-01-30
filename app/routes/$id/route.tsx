@@ -60,16 +60,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     where: {
       id: params.id,
     },
+    include: {
+      skills: true,
+      user: true,
+    },
   });
 
-  if (cookie) {
-    return json({
-      user,
-      resume,
-      sizecookie,
-      showBanner: cookie.dateTOSRead < LastUpdatedDate,
-    });
-  }
+  const svgldata = await fetch("http://localhost:3000/icons.json").then((res) =>
+    res.json()
+  );
 
   const headers = new Headers();
   headers.append(
@@ -86,11 +85,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     })
   );
 
+  if (cookie && sizecookie) {
+    return json({
+      user,
+      resume,
+      svgldata,
+      sizecookie,
+      showBanner: cookie.dateTOSRead < LastUpdatedDate,
+    });
+  }
+
   return json(
     {
       user,
       resume,
+      svgldata,
       showBanner: true,
+      sizecookie: { size: 0 },
     },
     {
       headers,
@@ -109,6 +120,7 @@ export default function Dashboard() {
     user: userr,
     resume,
     showBanner,
+    svgldata,
     sizecookie,
   } = useLoaderData<typeof loader>();
 
@@ -141,10 +153,31 @@ export default function Dashboard() {
               );
             }}
           >
-            <div className="flex flex-col h-[200px] items-center justify-center p-6">
-              <h1 className="font-semibold">Preview of your resume</h1>
+            <div className="flex flex-col h-[200px] items-center gap-4 justify-center p-6">
+              {/* <h1 className="font-semibold">Preview of your resume</h1> */}
               <br />
-              <h1>{resume?.name}</h1>
+              <h1 className="text-3xl text-center font-bold capitalize">
+                {resume?.user.name}
+              </h1>
+              <div className="flex gap-4">
+                {resume?.skills.map((item) => {
+                  const val = svgldata.filter(
+                    (data) => data.name === item.name
+                  )[0];
+
+                  return (
+                    // <p>{item.name}</p>
+                    <div
+                      key={item.id}
+                      className="w-[10%] group:active:animate-ping grid place-content-center aspect-square object-fill "
+                      // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+                      dangerouslySetInnerHTML={{
+                        __html: val?.svg,
+                      }}
+                    />
+                  );
+                })}
+              </div>
             </div>
           </ResizablePanel>
           <ResizableHandle
@@ -188,7 +221,7 @@ export default function Dashboard() {
             className={({ isActive }) => {
               const className =
                 "px-5 grid bg-white dark:bg-black/10 aspect-square w-10 h-10 shadow-sm bg-transparent border-[1px] dark:border-white/10 border-black/5 rounded-full place-content-center ";
-              return isActive ? "  " + className : "text-gray-400 " + className;
+              return isActive ? `  ${className}` : `text-gray-400 ${className}`;
             }}
             to={`/main`}
             prefetch="intent"
