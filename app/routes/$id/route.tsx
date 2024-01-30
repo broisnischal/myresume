@@ -153,13 +153,20 @@ export default function Dashboard() {
               );
             }}
           >
-            <div className="flex flex-col h-[200px] items-center gap-4 justify-center p-6">
+            <div className=" relative flex flex-col h-[200px] items-center gap-4 justify-center p-6">
               {/* <h1 className="font-semibold">Preview of your resume</h1> */}
               <br />
-              <h1 className="text-3xl text-center font-bold capitalize">
+              <div className="mb-10" />
+              <Link
+                to={`/r/${resume?.slug}`}
+                className="underline text-[14px] px-3 py-1 rounded-lg absolute top-0 left-0"
+              >
+                Preview Live
+              </Link>
+              <h1 className="text-5xl text-center font-bold capitalize">
                 {resume?.user.name}
               </h1>
-              <div className="flex gap-4">
+              <div className="flex gap-4 max-w-[80%] flex-wrap items-center justify-center">
                 {resume?.skills.map((item) => {
                   const val = svgldata.filter(
                     (data) => data.name === item.name

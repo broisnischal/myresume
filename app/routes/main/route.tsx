@@ -263,8 +263,11 @@ export default function Main() {
               {/* <logout.Form method="post" action="/logout"> */}
               <DropdownMenuItem
                 onClick={(e) => {
-                  e.preventDefault();
-                  submit("/logout", { method: "post" });
+                  // e.preventDefault();
+                  submit(null, {
+                    method: "post",
+                    action: "/logout",
+                  });
                 }}
               >
                 <input type="text" hidden name="_intent" value="logout" />
