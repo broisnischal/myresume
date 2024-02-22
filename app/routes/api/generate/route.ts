@@ -1,16 +1,16 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 
 export async function action({ request }: ActionFunctionArgs) {
-  console.log(request);
+	console.log(request);
 
-  switch (request.method) {
-    case "POST": {
-      console.log(request.body);
+	switch (request.method) {
+		case "POST": {
+			console.log(request.body);
 
-      return null;
-    }
-    default: {
-      throw new Error(`Invalid intent: ${request.method}`);
-    }
-  }
+			return null;
+		}
+		default: {
+			throw new Error(`Invalid intent: ${request.method}`);
+		}
+	}
 }

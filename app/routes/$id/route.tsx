@@ -1,23 +1,14 @@
-import { retriveUser } from "@/utils/auth.utils.server";
+import { ModeToggle } from "@/components/common/mode-toggler";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  createCookie,
-  json,
-} from "@remix-run/node";
-import {
-  Link,
-  NavLink,
-  Outlet,
-  useActionData,
-  useFetcher,
-  useLoaderData,
-  useLocation,
-  useParams,
-  useSubmit,
-} from "@remix-run/react";
-import navigation from "./resume/navigation";
-import { Button } from "@/components/ui/button";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -29,24 +20,24 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ModeToggle } from "@/components/common/mode-toggler";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User } from "@prisma/client";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MonitorDot } from "lucide-react";
-import { db } from "@/db/db.server";
-import { useEffect, useState } from "react";
-import { cookie } from "@/session.server";
 import { resizeCookie, tosBannerCookie } from "@/cookie.server";
+import { db } from "@/db/db.server";
+import { retriveUser } from "@/utils/auth.utils.server";
+import { User } from "@prisma/client";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useActionData,
+  useLoaderData,
+  useLocation,
+  useParams,
+  useSubmit,
+} from "@remix-run/react";
+import { MonitorDot } from "lucide-react";
 import Banner, { LastUpdatedDate } from "./cookie-banner";
+import navigation from "./resume/navigation";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await retriveUser(request);
@@ -153,7 +144,7 @@ export default function Dashboard() {
               );
             }}
           >
-            <div className=" relative flex flex-col h-[200px] items-center gap-4 justify-center p-6">
+            <div className=" relative flex flex-col h-[200px] items-center gap-4 justify-center py-6">
               {/* <h1 className="font-semibold">Preview of your resume</h1> */}
               <br />
               <div className="mb-10" />
@@ -163,27 +154,56 @@ export default function Dashboard() {
               >
                 Preview Live
               </Link>
-              <h1 className="text-5xl text-center font-bold capitalize">
+
+              <h1 className="text-6xl text-center font-bold capitalize">
                 {resume?.user.name}
               </h1>
-              <div className="flex gap-4 max-w-[80%] flex-wrap items-center justify-center">
-                {resume?.skills.map((item) => {
-                  const val = svgldata.filter(
-                    (data) => data.name === item.name
-                  )[0];
 
-                  return (
-                    // <p>{item.name}</p>
-                    <div
-                      key={item.id}
-                      className="w-[10%] group:active:animate-ping grid place-content-center aspect-square object-fill "
-                      // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-                      dangerouslySetInnerHTML={{
-                        __html: val?.svg,
-                      }}
-                    />
-                  );
-                })}
+              <div className="box bottom-0 w-full">
+                <div className="horizontal-scrolling-items text-customOrange font-GilroyHeavy text-[1rem] xsm:text-[3rem] lg:text-[4.5rem] uppercase">
+                  <div className="horizontal-scrolling-items__item ">
+                    <div className="flex marquee gap-7">
+                      {resume?.skills.map((item) => {
+                        const val = svgldata.filter(
+                          (data) => data.name === item.name
+                        )[0];
+
+                        return (
+                          <div key={item.id} className="">
+                            <div
+                              className="w-[100%] rounded-xl group:active:animate-ping place-content-center aspect-square object-fill flex-shrink-0 relative flex items-center border border-transparent bg-gradient-to-br from-white to-black/10 dark:from-white/70 dark:to-white/100 bg-clip-padding-box border-box p-[10px]"
+                              // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+                              dangerouslySetInnerHTML={{
+                                __html: val?.svg,
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="horizontal-scrolling-items__item ">
+                    <div className="flex marquee gap-7">
+                      {resume?.skills.map((item) => {
+                        const val = svgldata.filter(
+                          (data) => data.name === item.name
+                        )[0];
+
+                        return (
+                          <div key={item.id} className="">
+                            <div
+                              className="w-[100%] rounded-xl group:active:animate-ping place-content-center aspect-square object-fill flex-shrink-0 relative flex items-center border border-transparent bg-gradient-to-br from-white to-black/10 dark:from-white/70 dark:to-white/100 bg-clip-padding-box border-box p-[10px]"
+                              // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+                              dangerouslySetInnerHTML={{
+                                __html: val?.svg,
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </ResizablePanel>
