@@ -11,6 +11,9 @@ const envVariables = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   GOOGLE_CALLBACK_URL: z.string(),
+  LINKEDIN_CLIENT_ID: z.string(),
+  LINKEDIN_CLIENT_SECRET: z.string(),
+  LINKEDIN_CALLBACK_URL: z.string(),
 });
 
 envVariables.parse(process.env);

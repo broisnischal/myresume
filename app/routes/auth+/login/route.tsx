@@ -34,6 +34,9 @@ export default function Login() {
           </span>
         </Button>
       </Form>
+      <Form action="/auth/linkedin" method="post">
+        <button>Login with Linkedin</button>
+      </Form>
       <div className="mt-8  text-center">
         <p className="px-8 text-center text-[18px] text-balance max-w-[90%] m-auto text-muted-foreground">
           By clicking continue, you agree to our{" "}
