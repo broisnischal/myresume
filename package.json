@@ -20,6 +20,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.17.1",
     "@conform-to/react": "^0.9.1",
     "@conform-to/zod": "^0.9.1",
     "@epic-web/remember": "^1.0.2",
