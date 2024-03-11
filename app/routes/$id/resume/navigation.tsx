@@ -21,11 +21,11 @@ const navigation: NavigationItem[] = [
     link: "/",
     icon: <HomeIcon size={20} className="" />,
   },
-  {
-    name: "Links",
-    link: "link",
-    icon: <LinkIcon size={20} className="" />,
-  },
+  // {
+  //   name: "Links",
+  //   link: "link",
+  //   icon: <LinkIcon size={20} className="" />,
+  // },
   {
     name: "Create",
     link: "create",
@@ -51,11 +51,11 @@ const navigation: NavigationItem[] = [
     link: "bio",
     icon: <Fingerprint size={20} className="" />,
   },
-  {
-    name: "analytics",
-    link: "analytics",
-    icon: <GanttChart size={20} className="" />,
-  },
+  // {
+  //   name: "analytics",
+  //   link: "analytics",
+  //   icon: <GanttChart size={20} className="" />,
+  // },
 ];
 
 export default navigation;

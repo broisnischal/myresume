@@ -132,6 +132,7 @@ export default function Dashboard() {
         >
           <ResizablePanel
             defaultSize={Number(sizecookie.size)}
+            className="hidden lg:block"
             onResize={(size) => {
               submit(
                 { size, redirectTo: pathname + search },
@@ -144,7 +145,7 @@ export default function Dashboard() {
               );
             }}
           >
-            <div className=" relative flex flex-col h-[200px] items-center gap-4 justify-center py-6">
+            <div className=" relative flex  flex-col h-[200px] items-center gap-7 justify-center py-6  ">
               {/* <h1 className="font-semibold">Preview of your resume</h1> */}
               <br />
               <div className="mb-10" />
@@ -160,56 +161,52 @@ export default function Dashboard() {
               </h1>
 
               <div className="box bottom-0 w-full">
-                <div className="horizontal-scrolling-items text-customOrange font-GilroyHeavy text-[1rem] xsm:text-[3rem] lg:text-[4.5rem] uppercase">
-                  <div className="horizontal-scrolling-items__item ">
-                    <div className="flex marquee gap-7">
-                      {resume?.skills.map((item) => {
-                        const val = svgldata.filter(
-                          (data) => data.name === item.name
-                        )[0];
+                <div className="flex marquee px-10 gap-7">
+                  {resume?.skills.map((item) => {
+                    const val = svgldata.filter(
+                      (data) => data.name === item.name
+                    )[0];
 
-                        return (
-                          <div key={item.id} className="">
-                            <div
-                              className="w-[100%] rounded-xl group:active:animate-ping place-content-center aspect-square object-fill flex-shrink-0 relative flex items-center border border-transparent bg-gradient-to-br from-white to-black/10 dark:from-white/70 dark:to-white/100 bg-clip-padding-box border-box p-[10px]"
-                              // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-                              dangerouslySetInnerHTML={{
-                                __html: val?.svg,
-                              }}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="horizontal-scrolling-items__item ">
-                    <div className="flex marquee gap-7">
-                      {resume?.skills.map((item) => {
-                        const val = svgldata.filter(
-                          (data) => data.name === item.name
-                        )[0];
-
-                        return (
-                          <div key={item.id} className="">
-                            <div
-                              className="w-[100%] rounded-xl group:active:animate-ping place-content-center aspect-square object-fill flex-shrink-0 relative flex items-center border border-transparent bg-gradient-to-br from-white to-black/10 dark:from-white/70 dark:to-white/100 bg-clip-padding-box border-box p-[10px]"
-                              // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-                              dangerouslySetInnerHTML={{
-                                __html: val?.svg,
-                              }}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                    return (
+                      <div key={item.id} className="">
+                        <div
+                          className="w-[100%] rounded-xl group:active:animate-ping place-content-center aspect-square object-fill flex-shrink-0 relative flex items-center border border-transparent bg-gradient-to-br from-white to-black/10 dark:from-white/70 dark:to-white/100 bg-clip-padding-box border-box p-[10px]"
+                          // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+                          dangerouslySetInnerHTML={{
+                            __html: val?.svg,
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
+                {/* <div className="horizontal-scrolling-items__item ">
+                    <div className="flex marquee gap-7">
+                      {resume?.skills.map((item) => {
+                        const val = svgldata.filter(
+                          (data) => data.name === item.name
+                        )[0];
+
+                        return (
+                          <div key={item.id} className="">
+                            <div
+                              className="w-[100%] rounded-xl group:active:animate-ping place-content-center aspect-square object-fill flex-shrink-0 relative flex items-center border border-transparent bg-gradient-to-br from-white to-black/10 dark:from-white/70 dark:to-white/100 bg-clip-padding-box border-box p-[10px]"
+                              // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+                              dangerouslySetInnerHTML={{
+                                __html: val?.svg,
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div> */}
               </div>
             </div>
           </ResizablePanel>
           <ResizableHandle
             withHandle
-            className="bg-transparent relative border-r-[1px]  w-[10px] mr-[1rem]"
+            className="hidden lg:block bg-transparent relative border-r-[1px]  w-[10px] mr-[1rem]"
           />
           <ResizablePanel>
             <Outlet />

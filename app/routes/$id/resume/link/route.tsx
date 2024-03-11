@@ -1,9 +1,5 @@
-export default function LinkPage() {
-  return (
-    <div>
-      <h2>Social Links</h2>
+// export default function LinkPage() {
+//   return (
 
-      <h2>Project Links</h2>
-    </div>
-  );
-}
+//   );
+// }

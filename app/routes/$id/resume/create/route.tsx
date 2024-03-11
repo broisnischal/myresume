@@ -68,10 +68,10 @@ export default function AddSkills() {
   const { svgldata, user } = useLoaderData<typeof loader>();
 
   return (
-    <div>
-      <h1 className="text-3xl mb-5">Add Skills</h1>
+    <div className="flex flex-col gap-4 items-center justify-center ">
+      <h1 className="text-3xl mb-5 font-bold py-5">Add Skills</h1>
 
-      <div className="flex gap-4 flex-wrap items-center ">
+      <div className="flex gap-4 flex-wrap items-center justify-center ">
         {svgldata.map((svgdata, i) => (
           <Form
             key={i}

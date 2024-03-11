@@ -80,7 +80,7 @@ export default function Resume() {
 export function ErrorBoundary() {
   const error = useRouteError();
   if (error.status == 404) {
-    return <div>User doesnot exists</div>;
+    return <div>Resume not found</div>;
   }
 
   return <div>error</div>;
