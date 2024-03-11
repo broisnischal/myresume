@@ -1,4 +1,3 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
 import {
   Bolt,
   Briefcase,

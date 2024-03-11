@@ -61,6 +61,7 @@ import { Resume, User } from "@prisma/client";
 import moment from "moment";
 import { Badge } from "@/components/ui/badge";
 import Delete from "./delete";
+import { ModeToggle } from "@/components/common/mode-toggler";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await retriveUser(request);
@@ -235,7 +236,10 @@ export default function Main() {
     <div className="p-10 ">
       <div className="flex  items-center justify-between w-10/12 m-auto">
         <h2 className="text-4xl tracking-tighter font-bold  "> Resumes</h2>
-        <div>
+        <div className="flex items-center gap-3">
+          <div className="bg-muted rounded-full aspect-square w-[40px] h-[40px] relative grid place-content-center">
+            <ModeToggle />
+          </div>
           <DropdownMenu onOpenChange={() => {}}>
             <DropdownMenuTrigger>
               <Avatar className="border-[1px]">
@@ -245,14 +249,17 @@ export default function Main() {
                     src={"/resources/img/user/" + user.id}
                   />
                 )}
+
                 <AvatarFallback>
                   {String(user.name?.split(" ")).split("")[0].toUpperCase()}
                   {String(user.name?.split(" ")[1]).split("")[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
+
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 Profile
@@ -371,18 +378,17 @@ export default function Main() {
 }
 
 export function ResumeCard({ resume }: { resume: Resume }) {
-  const location = useLocation();
+  // const location = useLocation();
   const data = useLoaderData<typeof loader>();
-  const url = location.pathname;
+  // const url = location.pathname;
 
-  console.log(url);
   // const searchQuery = new URLSearchParams(location.search).get("q");
 
   return (
     <div className="flex hover:shadow-sm overflow-hidden flex-col  h-[300px] aspect-square border-[1px] rounded-md">
       <Link
         to={`/${resume.id}/resume`}
-        className="top h-1/2 bg-black/90 dark:bg-white/10 text-white  w-full grid place-content-center"
+        className="top h-1/2 bg-gray-200 dark:bg-white/10  w-full grid place-content-center"
       >
         <h1 className="text capitalize text-xl  tracking-tighter">
           {resume.name}

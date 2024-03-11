@@ -218,7 +218,6 @@ export default function Dashboard() {
       </div>
       <div className="fixed bottom-0 w-full flex py-2 mt-auto  items-center justify-center place-content-center gap-4 ">
         <div className="my-auto border-[1px] border-primary/10 w-fit flex dark:backdrop-blur-3xl dark:bg-black/50 backdrop-blur-2xl bg-transparent items-center justify-center px-2 py-2 gap-2 rounded-full">
-          <ModeToggle />
           {navigation.map((item, index) => {
             return (
               <NavLink
@@ -295,6 +294,7 @@ export default function Dashboard() {
                     Logout
                   </button>
                 </DropdownMenuItem>
+
                 {/* </logout.Form> */}
               </DropdownMenuContent>
             </DropdownMenu>

@@ -35,7 +35,13 @@ import {
   useParams,
   useSubmit,
 } from "@remix-run/react";
-import { Plus } from "lucide-react";
+import {
+  Delete,
+  DeleteIcon,
+  LucideDelete,
+  Plus,
+  Trash2Icon,
+} from "lucide-react";
 import { z } from "zod";
 import DatePicker from "@/components/common/datepicker";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -394,7 +400,7 @@ export default function LinkPage() {
   //     project.starred;
 
   return (
-    <div>
+    <div className="">
       {/* <fetcher.Form method="post">
         <button
           type="submit"
@@ -412,8 +418,8 @@ export default function LinkPage() {
           <TabsTrigger value="education">Education</TabsTrigger>
         </TabsList>
         <TabsContent tabIndex={-1} value="experience">
-          <div className="flex">
-            <div className="w-1/2">
+          <div className="flex flex-wrap flex-col items-center">
+            <div className="w-full">
               <ValidatedForm
                 method="post"
                 id="work-form"
@@ -500,13 +506,15 @@ export default function LinkPage() {
                       {moment(item.startDate).format("MMM YYYY")} -{" "}
                       {new Date(item.endDate).valueOf() > new Date().valueOf()
                         ? "Present"
-                        : moment(item.endDate).format("MMM YYYY")}
+                        : moment(item.endDate).format("MM YYYY")}
                     </div>
                     <div className="flex-1 border-l-2 border-black/80 py-4 dark:border-black relative w-[250px] pl-4">
                       <div className="absolute left-[-34px] rounded-full h-[14px] bg-white border-2 grid place-content-center w-[14px] lg:left-[-7px]">
                         <div className="h-[10px] w-[10px] rounded-full border  bg-gray-900" />
                       </div>
-                      <h4 className="text-lg font-bold">{item.title}</h4>
+                      <h4 className="text-lg font-bold flex items-center gap-3">
+                        {item.title} <Trash2Icon size={20} />
+                      </h4>
                       <p className="text-gray-500 dark:text-gray-400">
                         {item.company}
                       </p>
@@ -519,8 +527,8 @@ export default function LinkPage() {
           </div>
         </TabsContent>
         <TabsContent tabIndex={-1} value="education">
-          <div className="flex">
-            <div className="w-1/2">
+          <div className="flex flex-col">
+            <div className="w-full">
               <ValidatedForm
                 method="post"
                 id="ed-form"
@@ -601,7 +609,7 @@ export default function LinkPage() {
               </ValidatedForm>
             </div>
 
-            <div className="flex flex-col gap-4 w-1/2">
+            <div className="flex flex-col gap-4 w-full">
               {Array.from(education).map((item, index) => (
                 <Card key={item.id} className="min-w-full">
                   <CardHeader>
