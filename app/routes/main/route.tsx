@@ -87,7 +87,7 @@ export const schema = z.object({
   name: zfd.text(
     z.string({
       required_error: "First Name is a required field",
-    })
+    }),
   ),
   publicResume: zfd.checkbox(),
   templateResume: zfd.checkbox(),
@@ -113,8 +113,8 @@ export async function action({ request }: ActionFunctionArgs) {
           {
             message: "Whoops! That resume name is taken.",
             path: ["username"],
-          }
-        )
+          },
+        ),
       );
 
       const result = await serverValidator.validate(formData);
@@ -132,7 +132,7 @@ export async function action({ request }: ActionFunctionArgs) {
           },
           {
             headers: toastHeaders,
-          }
+          },
         );
       }
 
@@ -159,7 +159,7 @@ export async function action({ request }: ActionFunctionArgs) {
             title: "Success!",
             description: "Resume created successfully.",
           }),
-        }
+        },
       );
     }
     case "delete": {
@@ -186,7 +186,7 @@ export async function action({ request }: ActionFunctionArgs) {
           },
           {
             headers: toastHeaders,
-          }
+          },
         );
       }
 
@@ -206,7 +206,7 @@ export async function action({ request }: ActionFunctionArgs) {
             title: "Success!",
             description: "Resume deleted successfully.",
           }),
-        }
+        },
       );
     }
 
@@ -293,7 +293,7 @@ export default function Main() {
       <div className="box flex flex-wrap gap-5 gap-y-10">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="h-[300px]  aspect-square" variant="outline">
+            <Button className="h-[200px]  aspect-square" variant="outline">
               <div className="flex flex-col items-center">
                 <PlusIcon />
                 Add a resume
@@ -385,46 +385,46 @@ export function ResumeCard({ resume }: { resume: Resume }) {
   // const searchQuery = new URLSearchParams(location.search).get("q");
 
   return (
-    <div className="flex hover:shadow-sm overflow-hidden flex-col  h-[300px] aspect-square border-[1px] rounded-md">
+    <div className="flex hover:shadow-sm overflow-hidden flex-col  h-[200px]  border-[1px] rounded-md">
       <Link
         to={`/${resume.id}/resume`}
-        className="top h-1/2 bg-gray-200 dark:bg-white/10  w-full grid place-content-center"
+        className=" border-t-[20px] place-content-center"
       >
-        <h1 className="text capitalize text-xl  tracking-tighter">
-          {resume.name}
-        </h1>
-      </Link>
-      <div className="bottom flex flex-col h-full items-start p-5">
-        <h1 className="capitalize text-lg">{resume.name}</h1>
-        <p className="previewlink text-[15px] text-purple-500 font-bold tracking-tight">
-          <a
-            href={`/r/${resume.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
+        <div className="bottom flex flex-col h-full items-start p-5">
+          <h1 className="capitalize text-lg">{resume.name}</h1>
+          <Link
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              navigator.clipboard.writeText(`${data.hosturl}/r/${resume.slug}`);
+            }}
+            to={`/r/${resume.slug}`}
+            className="previewlink text-[15px] text-gray-500 font-bold tracking-tight"
           >
-            {`${data.hosturl}/r/${resume.slug}`}
-          </a>
-        </p>
+            {data.hosturl}/r/{resume.slug}
+          </Link>
 
-        <p className="text-[14px] text-muted-foreground">
-          Updated about {moment(resume.updatedAt).fromNow()}
-        </p>
-        <p className="py-1 text-[18px]">
-          <span className="text-[16px] lowercase mt-auto tracking-wider">
-            <span className="font-semibold">{resume.resumetype}</span> Resume
-          </span>
-        </p>
-        <div className="flex gap-2 mt-auto">
-          <Badge variant="outline">
-            {resume.public ? "Public" : "Private"}
-          </Badge>
-          {resume.template && <Badge variant="default">Template</Badge>}
-        </div>
+          <p className="text-[14px] text-muted-foreground">
+            Updated about {moment(resume.updatedAt).fromNow()}
+          </p>
+          <p className="py-1 text-[18px]">
+            <span className="text-[16px] lowercase mt-auto tracking-wider">
+              <span className="font-semibold">{resume.resumetype}</span> Resume
+            </span>
+          </p>
+          <div className="flex gap-2 mt-auto">
+            <Badge variant="outline">
+              {resume.public ? "Public" : "Private"}
+            </Badge>
+            {resume.template && <Badge variant="default">Template</Badge>}
+          </div>
 
-        <div className="button self-end">
-          <Delete item={resume} />
+          <div className="button self-end">
+            <Delete item={resume} />
+          </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 }
